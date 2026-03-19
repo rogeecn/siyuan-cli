@@ -49,7 +49,7 @@ function normalizeTagDoc(doc: RawTagDoc, index: number): TagDoc {
 export function createTagService(client: SiyuanClient): TagService {
   return {
     async list() {
-      const tags = await client.request<RawTagSummary[]>('/api/tag/getTag');
+      const tags = await client.request<RawTagSummary[]>('/api/tag/getTag', {});
       return (tags || []).map(normalizeTagSummary);
     },
     async docs(label) {

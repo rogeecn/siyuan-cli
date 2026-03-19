@@ -19,7 +19,7 @@ describe('SiyuanClient', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: 0, msg: '', data: { id: 'doc-1' } }),
+      text: async () => JSON.stringify({ code: 0, msg: '', data: { id: 'doc-1' } }),
     } as Response);
 
     const client = new SiyuanClient({
@@ -39,12 +39,91 @@ describe('SiyuanClient', () => {
     });
   });
 
+  test('returns null for successful empty responses', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => '',
+    } as Response);
+
+    const client = new SiyuanClient({
+      baseUrl: 'http://127.0.0.1:6806',
+      token: 'secret-token',
+    });
+
+    await expect(client.request('/api/system/time')).resolves.toBeNull();
+  });
+
+  test('throws normalized errors for malformed JSON responses', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => 'not json',
+    } as Response);
+
+    const client = new SiyuanClient({
+      baseUrl: 'http://127.0.0.1:6806',
+      token: 'secret-token',
+    });
+
+    await expect(client.request('/api/system/time')).rejects.toEqual(
+      expect.objectContaining({
+        name: 'SiyuanApiError',
+        message: 'Invalid JSON response',
+        endpoint: '/api/system/time',
+        status: 200,
+      })
+    );
+  });
+
+  test('throws normalized errors for malformed API envelopes', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => JSON.stringify({ ok: true }),
+    } as Response);
+
+    const client = new SiyuanClient({
+      baseUrl: 'http://127.0.0.1:6806',
+      token: 'secret-token',
+    });
+
+    await expect(client.request('/api/system/time')).rejects.toEqual(
+      expect.objectContaining({
+        name: 'SiyuanApiError',
+        message: 'Malformed API response',
+        endpoint: '/api/system/time',
+        status: 200,
+      })
+    );
+  });
+
+  test('throws normalized errors for network failures', async () => {
+    fetchMock.mockRejectedValue(new TypeError('fetch failed'));
+
+    const client = new SiyuanClient({
+      baseUrl: 'http://127.0.0.1:6806',
+      token: 'secret-token',
+    });
+
+    await expect(client.request('/api/system/version')).rejects.toEqual(
+      expect.objectContaining({
+        name: 'SiyuanApiError',
+        message: 'Network request failed',
+        endpoint: '/api/system/version',
+      })
+    );
+  });
+
   test('throws normalized errors for non-ok responses', async () => {
     fetchMock.mockResolvedValue({
       ok: false,
       status: 403,
       statusText: 'Forbidden',
-      json: async () => ({ code: -1, msg: 'forbidden', data: null }),
+      text: async () => JSON.stringify({ code: -1, msg: 'forbidden', data: null }),
     } as Response);
 
     const client = new SiyuanClient({
@@ -67,7 +146,7 @@ describe('SiyuanClient', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: -1, msg: 'token invalid', data: null }),
+      text: async () => JSON.stringify({ code: -1, msg: 'token invalid', data: null }),
     } as Response);
 
     const client = new SiyuanClient({

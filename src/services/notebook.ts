@@ -57,19 +57,19 @@ export function createNotebookService(client: SiyuanClient): NotebookService {
   return {
     async list() {
       const response = await client.request<NotebookListResponse>('/api/notebook/lsNotebooks');
-      return (response.notebooks || []).map((notebook) => normalizeNotebook(notebook));
+      return ((response?.notebooks) || []).map((notebook) => normalizeNotebook(notebook));
     },
     async get(id) {
       const notebookId = validateRequiredString(id, '--id');
       const response = await client.request<NotebookGetResponse>('/api/notebook/getNotebookByID', {
         notebook: notebookId,
       });
-      return normalizeNotebook(response.notebook);
+      return normalizeNotebook(response?.notebook);
     },
     async create(name) {
       const notebookName = validateRequiredString(name, '--name');
       const response = await client.request<NotebookCreateResponse>('/api/notebook/createNotebook', { name: notebookName });
-      const id = response.notebook?.id?.trim();
+      const id = response?.notebook?.id?.trim();
 
       if (!id) {
         throw new Error('Notebook response is missing required fields');

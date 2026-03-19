@@ -18,7 +18,7 @@ npm run build
 Run the CLI from the project directory:
 
 ```bash
-node dist/cli/run.js --help
+node dist/src/cli/run.js --help
 ```
 
 ## Configuration
@@ -40,19 +40,19 @@ If either variable is missing, commands fail at runtime with a readable error.
 ## Quick Examples
 
 ```bash
-node dist/cli/run.js system version
-node dist/cli/run.js search --content alpha
-node dist/cli/run.js doc get --id doc-123
-node dist/cli/run.js notebook list
-node dist/cli/run.js sql query --statement "select * from blocks limit 5"
-node dist/cli/run.js tag list
-node dist/cli/run.js block get --id blk-1
-node dist/cli/run.js export markdown --id doc-123
-node dist/cli/run.js file read --path /data/assets/readme.md
-node dist/cli/run.js attr list
-node dist/cli/run.js snapshot current
-node dist/cli/run.js template list
-node dist/cli/run.js notify push --msg "hello"
+node dist/src/cli/run.js system version
+node dist/src/cli/run.js search --content alpha
+node dist/src/cli/run.js doc get --id doc-123
+node dist/src/cli/run.js notebook list
+node dist/src/cli/run.js sql query --statement "select * from blocks limit 5"
+node dist/src/cli/run.js tag list
+node dist/src/cli/run.js block get --id blk-1
+node dist/src/cli/run.js export markdown --id doc-123
+node dist/src/cli/run.js file read --path /data/assets/readme.md
+node dist/src/cli/run.js attr list
+node dist/src/cli/run.js snapshot current
+node dist/src/cli/run.js template list
+node dist/src/cli/run.js notify push --msg "hello"
 ```
 
 ## JSON Output
@@ -60,9 +60,9 @@ node dist/cli/run.js notify push --msg "hello"
 Most implemented commands support `--json` for script-friendly output.
 
 ```bash
-node dist/cli/run.js system time --json
-node dist/cli/run.js search --tag work --json
-node dist/cli/run.js sql query --statement "select * from blocks limit 1" --json
+node dist/src/cli/run.js system time --json
+node dist/src/cli/run.js search --tag work --json
+node dist/src/cli/run.js sql query --statement "select * from blocks limit 1" --json
 ```
 
 ## Implemented Command Groups

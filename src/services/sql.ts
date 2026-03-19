@@ -9,7 +9,7 @@ export interface SqlService {
 export function createSqlService(client: SiyuanClient): SqlService {
   return {
     async query(statement) {
-      return client.request<SqlRow[]>('/api/query/sql', { stmt: statement });
+      return (await client.request<SqlRow[]>('/api/query/sql', { stmt: statement })) || [];
     },
   };
 }

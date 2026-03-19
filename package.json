@@ -4,7 +4,7 @@
   "description": "Human-friendly CLI for SiYuan Note",
   "type": "module",
   "bin": {
-    "siyuan": "dist/cli/run.js"
+    "siyuan": "dist/src/cli/run.js"
   },
   "scripts": {
     "build": "tsc",

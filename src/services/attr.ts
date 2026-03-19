@@ -12,10 +12,10 @@ export interface AttrService {
 export function createAttrService(client: SiyuanClient): AttrService {
   return {
     async get(id) {
-      return client.request<BlockAttrs>('/api/attr/getBlockAttrs', { id });
+      return (await client.request<BlockAttrs>('/api/attr/getBlockAttrs', { id })) || {};
     },
     async list() {
-      return client.request<string[]>('/api/attr/getAllKeys');
+      return (await client.request<string[]>('/api/attr/getAllKeys')) || [];
     },
     async set(id, key, value) {
       return client.request('/api/attr/setBlockAttrs', { id, attrs: { [key]: value } });

@@ -18,18 +18,39 @@ export class SiyuanApiError extends Error {
   }
 }
 
+async function readResponseBody(response: Response): Promise<string> {
+  if (typeof response.text === 'function') {
+    return response.text();
+  }
+
+  if (typeof response.json === 'function') {
+    const json = await response.json();
+    return JSON.stringify(json);
+  }
+
+  return '';
+}
+
 export class SiyuanClient {
   constructor(private readonly config: EnvConfig) {}
 
-  async request<T>(endpoint: string, body?: unknown): Promise<T> {
-    const response = await fetch(`${this.config.baseUrl}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${this.config.token}`,
-      },
-      body: body === undefined ? undefined : JSON.stringify(body),
-    });
+  async request<T>(endpoint: string, body?: unknown): Promise<T | null> {
+    let response: Response;
+
+    try {
+      response = await fetch(`${this.config.baseUrl}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${this.config.token}`,
+        },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      });
+    } catch {
+      throw new SiyuanApiError('Network request failed', endpoint);
+    }
+
+    const rawBody = await readResponseBody(response);
 
     if (!response.ok) {
       throw new SiyuanApiError(
@@ -39,7 +60,21 @@ export class SiyuanClient {
       );
     }
 
-    const payload = (await response.json()) as SiyuanApiEnvelope<T>;
+    if (rawBody.trim() === '') {
+      return null;
+    }
+
+    let payload: SiyuanApiEnvelope<T>;
+
+    try {
+      payload = JSON.parse(rawBody) as SiyuanApiEnvelope<T>;
+    } catch {
+      throw new SiyuanApiError('Invalid JSON response', endpoint, response.status);
+    }
+
+    if (typeof payload !== 'object' || payload === null || typeof payload.code !== 'number') {
+      throw new SiyuanApiError('Malformed API response', endpoint, response.status);
+    }
 
     if (payload.code !== 0) {
       throw new SiyuanApiError(

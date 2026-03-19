@@ -27,7 +27,7 @@ function normalizeTemplateContent(result: RawTemplateContent): TemplateContent {
 export function createTemplateService(client: SiyuanClient): TemplateService {
   return {
     async list() {
-      return client.request<string[]>('/api/template/searchTemplate', { k: '' });
+      return (await client.request<string[]>('/api/template/searchTemplate', { k: '' })) || [];
     },
     async get(path) {
       const result = await client.request<RawTemplateContent>('/api/template/render', { path });

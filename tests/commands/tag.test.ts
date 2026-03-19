@@ -30,7 +30,7 @@ describe('tag command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({
+      text: async () => JSON.stringify({
         code: 0,
         msg: '',
         data: [
@@ -48,7 +48,7 @@ describe('tag command', () => {
         'Content-Type': 'application/json',
         Authorization: 'Token secret-token',
       },
-      body: undefined,
+      body: JSON.stringify({}),
     });
     expect(logSpy).toHaveBeenCalledWith(['1. work (12)', '2. project (3)'].join('\n'));
   });
@@ -58,7 +58,7 @@ describe('tag command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: 0, msg: '', data: [{ label: 'work', count: 12 }] }),
+      text: async () => JSON.stringify({ code: 0, msg: '', data: [{ label: 'work', count: 12 }] }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'tag', 'list', '--json']);
@@ -76,7 +76,7 @@ describe('tag command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({
+      text: async () => JSON.stringify({
         code: 0,
         msg: '',
         data: [
@@ -110,7 +110,7 @@ describe('tag command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({
+      text: async () => JSON.stringify({
         code: 0,
         msg: '',
         data: [{ id: 'doc-1', title: 'Work Plan', path: '/Projects/Work Plan' }],
@@ -133,7 +133,7 @@ describe('tag command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: 0, msg: '', data: [] }),
+      text: async () => JSON.stringify({ code: 0, msg: '', data: [] }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'tag', 'list']);
@@ -146,7 +146,7 @@ describe('tag command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: 0, msg: '', data: null }),
+      text: async () => JSON.stringify({ code: 0, msg: '', data: null }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'tag', 'rename', '--old', 'work', '--new', 'career']);
@@ -167,7 +167,7 @@ describe('tag command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: 0, msg: '', data: null }),
+      text: async () => JSON.stringify({ code: 0, msg: '', data: null }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'tag', 'rename', '--old', 'work', '--new', 'career', '--json']);
@@ -188,7 +188,7 @@ describe('tag command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: 0, msg: '', data: null }),
+      text: async () => JSON.stringify({ code: 0, msg: '', data: null }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'tag', 'remove', '--label', 'work', '--yes']);
@@ -209,7 +209,7 @@ describe('tag command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: 0, msg: '', data: null }),
+      text: async () => JSON.stringify({ code: 0, msg: '', data: null }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'tag', 'remove', '--label', 'work', '--yes', '--json']);

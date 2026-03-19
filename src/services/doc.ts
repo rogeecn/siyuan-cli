@@ -124,11 +124,23 @@ export function extractMarkdown(result: unknown) {
 
 export function createDocService(client: SiyuanClient): DocService {
   return {
-    get(id) {
-      return client.request<GetDocResult>('/api/filetree/getDoc', { id });
+    async get(id) {
+      const result = await client.request<GetDocResult>('/api/filetree/getDoc', { id });
+
+      if (!result) {
+        throw new Error('Document response is empty');
+      }
+
+      return result;
     },
-    create(input) {
-      return client.request<CreateDocResult>('/api/filetree/createDocWithMd', input);
+    async create(input) {
+      const result = await client.request<CreateDocResult>('/api/filetree/createDocWithMd', input);
+
+      if (!result) {
+        throw new Error('Create document response is empty');
+      }
+
+      return result;
     },
     update({ id, markdown }) {
       return client.request('/api/filetree/putDoc', { id, markdown });
