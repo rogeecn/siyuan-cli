@@ -117,6 +117,23 @@ describe('snapshot command', () => {
 }`);
   });
 
+  test('prints a normalized JSON object when snapshot current returns an empty response body', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => '',
+    } as Response);
+
+    await createCli().parseAsync(['node', 'siyuan', 'snapshot', 'current', '--json']);
+
+    expect(logSpy).toHaveBeenCalledWith(`{
+  "id": "(unknown id)",
+  "time": "(unknown time)",
+  "memo": ""
+}`);
+  });
+
   test('prints a friendly message for empty snapshot results', async () => {
     fetchMock.mockResolvedValue({
       ok: true,

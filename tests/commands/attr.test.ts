@@ -107,6 +107,19 @@ describe('attr command', () => {
 ]`);
   });
 
+  test('prints an empty JSON array when attr list returns an empty response body', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => '',
+    } as Response);
+
+    await createCli().parseAsync(['node', 'siyuan', 'attr', 'list', '--json']);
+
+    expect(logSpy).toHaveBeenCalledWith('[]');
+  });
+
   test('prints a friendly message for empty attribute key results', async () => {
     fetchMock.mockResolvedValue({
       ok: true,

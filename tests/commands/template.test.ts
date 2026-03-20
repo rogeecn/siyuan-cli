@@ -102,6 +102,19 @@ describe('template command', () => {
 }`);
   });
 
+  test('prints an empty JSON array when template list returns an empty response body', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => '',
+    } as Response);
+
+    await createCli().parseAsync(['node', 'siyuan', 'template', 'list', '--json']);
+
+    expect(logSpy).toHaveBeenCalledWith('[]');
+  });
+
   test('prints a friendly message for empty template results', async () => {
     fetchMock.mockResolvedValue({
       ok: true,
