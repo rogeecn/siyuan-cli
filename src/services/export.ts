@@ -30,11 +30,14 @@ interface RawExportPreview {
   name?: string;
   path?: string;
   exportPath?: string;
+  html?: string;
 }
 
 interface RawExportMarkdownResult {
   document?: string;
   markdownPath?: string;
+  name?: string;
+  zip?: string;
 }
 
 interface RawExportHtmlResult {
@@ -61,6 +64,15 @@ export interface ExportService {
 }
 
 function normalizePreview(result: RawExportPreview): ExportPreview {
+  if (result.html?.trim()) {
+    const titleMatch = result.html.match(/title="([^"]+)"/);
+    return {
+      name: titleMatch?.[1]?.trim() || '(unknown)',
+      path: '(preview-only)',
+      exportPath: '(preview-only)',
+    };
+  }
+
   return {
     name: result.name?.trim() || '(unknown)',
     path: result.path?.trim() || '(no path)',
@@ -70,15 +82,15 @@ function normalizePreview(result: RawExportPreview): ExportPreview {
 
 function normalizeMarkdown(result: RawExportMarkdownResult): ExportMarkdownResult {
   return {
-    document: result.document?.trim() || '(unknown)',
-    markdownPath: result.markdownPath?.trim() || '(no markdown path)',
+    document: result.document?.trim() || result.name?.trim() || '(unknown)',
+    markdownPath: result.markdownPath?.trim() || result.zip?.trim() || '(no markdown path)',
   };
 }
 
-function normalizeHtml(result: RawExportHtmlResult): ExportHtmlResult {
+function normalizeHtml(result: RawExportHtmlResult | null | undefined): ExportHtmlResult {
   return {
-    document: result.document?.trim() || '(unknown)',
-    htmlPath: result.htmlPath?.trim() || '(no html path)',
+    document: result?.document?.trim() || '(unknown)',
+    htmlPath: result?.htmlPath?.trim() || '(no html path)',
   };
 }
 

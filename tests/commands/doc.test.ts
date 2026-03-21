@@ -108,6 +108,57 @@ describe('doc command', () => {
     expect(logSpy).toHaveBeenCalledWith('Created document doc-123 at /Projects/Spec');
   });
 
+  test('creates a document when the server returns a string id', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => JSON.stringify({ code: 0, msg: '', data: 'doc-123' }),
+    } as Response);
+
+    await createCli().parseAsync([
+      'node',
+      'siyuan',
+      'doc',
+      'create',
+      '--notebook',
+      'nb-1',
+      '--path',
+      '/Projects/Spec',
+      '--content',
+      '# Draft',
+    ]);
+
+    expect(logSpy).toHaveBeenCalledWith('Created document doc-123 at (unknown path)');
+  });
+
+  test('prints normalized json when create returns a string id', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => JSON.stringify({ code: 0, msg: '', data: 'doc-123' }),
+    } as Response);
+
+    await createCli().parseAsync([
+      'node',
+      'siyuan',
+      'doc',
+      'create',
+      '--notebook',
+      'nb-1',
+      '--path',
+      '/Projects/Spec',
+      '--content',
+      '# Draft',
+      '--json',
+    ]);
+
+    expect(logSpy).toHaveBeenCalledWith(`{
+  "id": "doc-123"
+}`);
+  });
+
   test('creates a document from content file', async () => {
     fetchMock.mockResolvedValue({
       ok: true,
@@ -165,13 +216,13 @@ describe('doc command', () => {
       'Updated body',
     ]);
 
-    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/filetree/putDoc', {
+    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/block/updateBlock', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Token secret-token',
       },
-      body: JSON.stringify({ id: 'doc-123', markdown: 'Updated body' }),
+      body: JSON.stringify({ id: 'doc-123', data: 'Updated body', dataType: 'markdown' }),
     });
     expect(logSpy).toHaveBeenCalledWith('Updated document doc-123');
   });
@@ -335,13 +386,13 @@ describe('doc command', () => {
 
     await createCli().parseAsync(['node', 'siyuan', 'doc', 'rename', '--id', 'doc-123', '--path', '/Projects/NewName']);
 
-    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/filetree/renameDoc', {
+    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/filetree/renameDocByID', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Token secret-token',
       },
-      body: JSON.stringify({ id: 'doc-123', path: '/Projects/NewName' }),
+      body: JSON.stringify({ id: 'doc-123', title: '/Projects/NewName' }),
     });
     expect(logSpy).toHaveBeenCalledWith('Renamed document doc-123 to /Projects/NewName');
   });
@@ -385,7 +436,7 @@ describe('doc command', () => {
 
     await createCli().parseAsync(['node', 'siyuan', 'doc', 'remove', '--id', 'doc-123', '--yes']);
 
-    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/filetree/removeDoc', {
+    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/filetree/removeDocByID', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

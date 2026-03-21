@@ -1,4 +1,4 @@
-import { SiyuanClient } from '../core/http.js';
+import { SiyuanApiError, SiyuanClient } from '../core/http.js';
 
 export interface TemplateContent {
   path: string;
@@ -24,14 +24,44 @@ function normalizeTemplateContent(result: RawTemplateContent): TemplateContent {
   };
 }
 
+function normalizeTemplatePath(path: string) {
+  if (path.startsWith('/templates/')) {
+    return `/data${path}`;
+  }
+
+  return path;
+}
+
 export function createTemplateService(client: SiyuanClient): TemplateService {
   return {
     async list() {
       return (await client.request<string[]>('/api/template/searchTemplate', { k: '' })) || [];
     },
     async get(path) {
-      const result = await client.request<RawTemplateContent>('/api/template/render', { path });
-      return normalizeTemplateContent(result || {});
+      const normalizedPath = normalizeTemplatePath(path);
+
+      try {
+        const result = await client.request<string>('/api/file/getFile', { path: normalizedPath });
+        return {
+          path: normalizedPath,
+          content: result ?? '',
+        };
+      } catch (error) {
+        if (!(error instanceof SiyuanApiError) || error.message !== 'Invalid JSON response') {
+          throw error;
+        }
+
+        const response = await fetch(`${process.env.SIYUAN_BASE_URL}/api/file/getFile`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Token ${process.env.SIYUAN_TOKEN}`,
+          },
+          body: JSON.stringify({ path: normalizedPath }),
+        });
+        const content = await response.text();
+        return { path: normalizedPath, content };
+      }
     },
     async render(path, id) {
       return client.request('/api/template/renderSprig', { path, id });

@@ -71,13 +71,13 @@ describe('notebook command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { notebook: { id: 'nb-1', name: 'Projects', closed: false } },
+        data: { box: 'nb-1', name: 'Projects', conf: { closed: false } },
       }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'notebook', 'get', '--id', 'nb-1', '--json']);
 
-    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/notebook/getNotebookByID', {
+    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/notebook/getNotebookConf', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

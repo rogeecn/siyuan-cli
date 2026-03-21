@@ -34,6 +34,59 @@ async function readResponseBody(response: Response): Promise<string> {
 export class SiyuanClient {
   constructor(private readonly config: EnvConfig) {}
 
+  async requestMultipart<T>(endpoint: string, body: FormData): Promise<T | null> {
+    let response: Response;
+
+    try {
+      response = await fetch(`${this.config.baseUrl}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Token ${this.config.token}`,
+        },
+        body,
+      });
+    } catch {
+      throw new SiyuanApiError('Network request failed', endpoint);
+    }
+
+    const rawBody = await readResponseBody(response);
+
+    if (!response.ok) {
+      throw new SiyuanApiError(
+        `HTTP ${response.status} ${response.statusText}`,
+        endpoint,
+        response.status,
+      );
+    }
+
+    if (rawBody.trim() === '') {
+      return null;
+    }
+
+    let payload: SiyuanApiEnvelope<T>;
+
+    try {
+      payload = JSON.parse(rawBody) as SiyuanApiEnvelope<T>;
+    } catch {
+      throw new SiyuanApiError('Invalid JSON response', endpoint, response.status);
+    }
+
+    if (typeof payload !== 'object' || payload === null || typeof payload.code !== 'number') {
+      throw new SiyuanApiError('Malformed API response', endpoint, response.status);
+    }
+
+    if (payload.code !== 0) {
+      throw new SiyuanApiError(
+        payload.msg || `API error (${payload.code})`,
+        endpoint,
+        response.status,
+        payload.code,
+      );
+    }
+
+    return payload.data;
+  }
+
   async request<T>(endpoint: string, body?: unknown): Promise<T | null> {
     let response: Response;
 

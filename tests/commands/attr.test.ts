@@ -33,7 +33,7 @@ describe('attr command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { alias: 'project-note', 'custom-color': 'blue' },
+        data: { id: 'blk-1', updated: '20260321001647' },
       }),
     } as Response);
 
@@ -47,7 +47,7 @@ describe('attr command', () => {
       },
       body: JSON.stringify({ id: 'blk-1' }),
     });
-    expect(logSpy).toHaveBeenCalledWith(['alias: project-note', 'custom-color: blue'].join('\n'));
+    expect(logSpy).toHaveBeenCalledWith(['id: blk-1', 'updated: 20260321001647'].join('\n'));
   });
 
   test('gets block attributes with raw json output', async () => {
@@ -58,15 +58,15 @@ describe('attr command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { alias: 'project-note', 'custom-color': 'blue' },
+        data: { id: 'blk-1', updated: '20260321001647' },
       }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'attr', 'get', '--id', 'blk-1', '--json']);
 
     expect(logSpy).toHaveBeenCalledWith(`{
-  "alias": "project-note",
-  "custom-color": "blue"
+  "id": "blk-1",
+  "updated": "20260321001647"
 }`);
   });
 

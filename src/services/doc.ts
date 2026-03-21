@@ -122,6 +122,14 @@ export function extractMarkdown(result: unknown) {
   throw new Error('Document response does not contain markdown content');
 }
 
+function normalizeCreateDocResult(result: CreateDocResult | string): CreateDocResult {
+  if (typeof result === 'string') {
+    return { id: result };
+  }
+
+  return result || {};
+}
+
 export function createDocService(client: SiyuanClient): DocService {
   return {
     async get(id) {
@@ -134,16 +142,16 @@ export function createDocService(client: SiyuanClient): DocService {
       return result;
     },
     async create(input) {
-      const result = await client.request<CreateDocResult>('/api/filetree/createDocWithMd', input);
+      const result = await client.request<CreateDocResult | string>('/api/filetree/createDocWithMd', input);
 
       if (!result) {
         throw new Error('Create document response is empty');
       }
 
-      return result;
+      return normalizeCreateDocResult(result);
     },
     update({ id, markdown }) {
-      return client.request('/api/filetree/putDoc', { id, markdown });
+      return client.request('/api/block/updateBlock', { id, data: markdown, dataType: 'markdown' });
     },
     append({ id, markdown }) {
       return client.request('/api/filetree/appendBlock', {
@@ -153,9 +161,9 @@ export function createDocService(client: SiyuanClient): DocService {
       });
     },
     rename({ id, path }) {
-      return client.request('/api/filetree/renameDoc', {
+      return client.request('/api/filetree/renameDocByID', {
         id: requireValue(id, '--id'),
-        path: requireValue(path, '--path'),
+        title: requireValue(path, '--path'),
       });
     },
     move({ id, path }) {
@@ -166,7 +174,7 @@ export function createDocService(client: SiyuanClient): DocService {
       });
     },
     remove(id) {
-      return client.request('/api/filetree/removeDoc', {
+      return client.request('/api/filetree/removeDocByID', {
         id: requireValue(id, '--id'),
       });
     },

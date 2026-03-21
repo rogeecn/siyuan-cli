@@ -42,7 +42,7 @@ describe('file command', () => {
 
     await createCli().parseAsync(['node', 'siyuan', 'file', 'tree', '--path', '/data/assets']);
 
-    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/file/getFile', {
+    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/file/readDir', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ describe('file command', () => {
 
     await createCli().parseAsync(['node', 'siyuan', 'file', 'read', '--path', '/data/assets/readme.md']);
 
-    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/file/getFileContent', {
+    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/file/getFile', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -93,6 +93,19 @@ describe('file command', () => {
       },
       body: JSON.stringify({ path: '/data/assets/readme.md' }),
     });
+    expect(logSpy).toHaveBeenCalledWith('# Hello\n\nWorld');
+  });
+
+  test('reads raw text file content responses', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => '# Hello\n\nWorld',
+    } as Response);
+
+    await createCli().parseAsync(['node', 'siyuan', 'file', 'read', '--path', '/data/assets/readme.md']);
+
     expect(logSpy).toHaveBeenCalledWith('# Hello\n\nWorld');
   });
 
@@ -137,14 +150,16 @@ describe('file command', () => {
       'node', 'siyuan', 'file', 'write', '--path', '/data/assets/note.md', '--content', '# New',
     ]);
 
-    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/file/putFile', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Token secret-token',
-      },
-      body: JSON.stringify({ path: '/data/assets/note.md', file: '# New' }),
-    });
+    expect(global.fetch).toHaveBeenCalledWith(
+      'http://127.0.0.1:6806/api/file/putFile',
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({
+          Authorization: 'Token secret-token',
+        }),
+        body: expect.any(FormData),
+      })
+    );
     expect(logSpy).toHaveBeenCalledWith('Wrote file /data/assets/note.md');
   });
 

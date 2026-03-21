@@ -33,7 +33,7 @@ describe('export command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { name: 'Spec', path: '/Projects/Spec', exportPath: '/tmp/spec' },
+        data: { html: '<h1>Spec</h1>' },
       }),
     } as Response);
 
@@ -48,9 +48,9 @@ describe('export command', () => {
       body: JSON.stringify({ id: 'doc-1' }),
     });
     expect(logSpy).toHaveBeenCalledWith([
-      'name: Spec',
-      'path: /Projects/Spec',
-      'exportPath: /tmp/spec',
+      'name: (unknown)',
+      'path: (preview-only)',
+      'exportPath: (preview-only)',
     ].join('\n'));
   });
 
@@ -62,16 +62,16 @@ describe('export command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { name: 'Spec', path: '/Projects/Spec', exportPath: '/tmp/spec' },
+        data: { html: '<h1>Spec</h1>' },
       }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'export', 'preview', '--id', 'doc-1', '--json']);
 
     expect(logSpy).toHaveBeenCalledWith(`{
-  "name": "Spec",
-  "path": "/Projects/Spec",
-  "exportPath": "/tmp/spec"
+  "name": "(unknown)",
+  "path": "(preview-only)",
+  "exportPath": "(preview-only)"
 }`);
   });
 
@@ -83,7 +83,7 @@ describe('export command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { document: 'Spec', markdownPath: '/tmp/spec.md' },
+        data: { name: 'doc-1', zip: '/export/spec.md.zip' },
       }),
     } as Response);
 
@@ -97,7 +97,7 @@ describe('export command', () => {
       },
       body: JSON.stringify({ id: 'doc-1' }),
     });
-    expect(logSpy).toHaveBeenCalledWith(['document: Spec', 'markdownPath: /tmp/spec.md'].join('\n'));
+    expect(logSpy).toHaveBeenCalledWith(['document: doc-1', 'markdownPath: /export/spec.md.zip'].join('\n'));
   });
 
   test('exports markdown with raw json output', async () => {
@@ -108,15 +108,15 @@ describe('export command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { document: 'Spec', markdownPath: '/tmp/spec.md' },
+        data: { name: 'doc-1', zip: '/export/spec.md.zip' },
       }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'export', 'markdown', '--id', 'doc-1', '--json']);
 
     expect(logSpy).toHaveBeenCalledWith(`{
-  "document": "Spec",
-  "markdownPath": "/tmp/spec.md"
+  "document": "doc-1",
+  "markdownPath": "/export/spec.md.zip"
 }`);
   });
 
@@ -128,7 +128,7 @@ describe('export command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { document: 'Spec', htmlPath: '/tmp/spec.html' },
+        data: null,
       }),
     } as Response);
 
@@ -142,7 +142,7 @@ describe('export command', () => {
       },
       body: JSON.stringify({ id: 'doc-1' }),
     });
-    expect(logSpy).toHaveBeenCalledWith(['document: Spec', 'htmlPath: /tmp/spec.html'].join('\n'));
+    expect(logSpy).toHaveBeenCalledWith(['document: (unknown)', 'htmlPath: (no html path)'].join('\n'));
   });
 
   test('exports html with raw json output', async () => {
@@ -153,15 +153,15 @@ describe('export command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { document: 'Spec', htmlPath: '/tmp/spec.html' },
+        data: null,
       }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'export', 'html', '--id', 'doc-1', '--json']);
 
     expect(logSpy).toHaveBeenCalledWith(`{
-  "document": "Spec",
-  "htmlPath": "/tmp/spec.html"
+  "document": "(unknown)",
+  "htmlPath": "(no html path)"
 }`);
   });
 

@@ -13,7 +13,9 @@ export interface BlockChild {
 
 interface RawBlockInfo {
   id?: string;
+  rootID?: string;
   content?: string;
+  rootTitle?: string;
   path?: string;
   hpath?: string;
 }
@@ -35,8 +37,8 @@ export interface BlockService {
 
 function normalizeBlockInfo(block: RawBlockInfo): BlockInfo {
   return {
-    id: block.id?.trim() || '(unknown id)',
-    content: block.content?.trim() || '',
+    id: block.id?.trim() || block.rootID?.trim() || '(unknown id)',
+    content: block.content?.trim() || block.rootTitle?.trim() || '',
     path: block.hpath?.trim() || block.path?.trim() || '(no path)',
   };
 }

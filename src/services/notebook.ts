@@ -12,6 +12,11 @@ interface NotebookListResponse {
 
 interface NotebookGetResponse {
   notebook?: Partial<Notebook>;
+  box?: string;
+  name?: string;
+  conf?: {
+    closed?: boolean;
+  };
 }
 
 interface NotebookCreateResponse {
@@ -53,6 +58,25 @@ function normalizeNotebook(input: Partial<Notebook> | undefined) {
   };
 }
 
+function normalizeNotebookGetResponse(input: NotebookGetResponse | null | undefined) {
+  if (input?.notebook) {
+    return normalizeNotebook(input.notebook);
+  }
+
+  const id = input?.box?.trim();
+  const name = input?.name?.trim();
+
+  if (!id || !name) {
+    throw new Error('Notebook response is missing required fields');
+  }
+
+  return {
+    id,
+    name,
+    closed: Boolean(input?.conf?.closed),
+  };
+}
+
 export function createNotebookService(client: SiyuanClient): NotebookService {
   return {
     async list() {
@@ -61,10 +85,10 @@ export function createNotebookService(client: SiyuanClient): NotebookService {
     },
     async get(id) {
       const notebookId = validateRequiredString(id, '--id');
-      const response = await client.request<NotebookGetResponse>('/api/notebook/getNotebookByID', {
+      const response = await client.request<NotebookGetResponse>('/api/notebook/getNotebookConf', {
         notebook: notebookId,
       });
-      return normalizeNotebook(response?.notebook);
+      return normalizeNotebookGetResponse(response);
     },
     async create(name) {
       const notebookName = validateRequiredString(name, '--name');

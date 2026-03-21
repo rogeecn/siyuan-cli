@@ -33,7 +33,7 @@ describe('block command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { id: 'blk-1', content: 'Alpha block', path: '/Projects/Spec' },
+        data: { rootID: 'blk-1', rootTitle: 'Alpha block', path: '/Projects/Spec' },
       }),
     } as Response);
 
@@ -58,7 +58,7 @@ describe('block command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { id: 'blk-1', content: 'Alpha block', path: '/Projects/Spec' },
+        data: { rootID: 'blk-1', rootTitle: 'Alpha block', path: '/Projects/Spec' },
       }),
     } as Response);
 

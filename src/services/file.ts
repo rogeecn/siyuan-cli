@@ -1,4 +1,4 @@
-import { SiyuanClient } from '../core/http.js';
+import { SiyuanApiError, SiyuanClient } from '../core/http.js';
 
 export interface FileTreeNode {
   name: string;
@@ -44,15 +44,37 @@ function normalizeReadResult(result: RawFileReadResult): FileReadResult {
 export function createFileService(client: SiyuanClient): FileService {
   return {
     async tree(path) {
-      const items = await client.request<RawFileTreeNode[]>('/api/file/getFile', { path });
+      const items = await client.request<RawFileTreeNode[]>('/api/file/readDir', { path });
       return (items || []).map((item, index) => normalizeTreeNode(item, index));
     },
     async read(path) {
-      const result = await client.request<RawFileReadResult>('/api/file/getFileContent', { path });
-      return normalizeReadResult(result || {});
+      try {
+        const result = await client.request<RawFileReadResult>('/api/file/getFile', { path });
+        return normalizeReadResult(result || {});
+      } catch (error) {
+        if (!(error instanceof SiyuanApiError) || error.message !== 'Invalid JSON response') {
+          throw error;
+        }
+
+        const response = await fetch(`${process.env.SIYUAN_BASE_URL}/api/file/getFile`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Token ${process.env.SIYUAN_TOKEN}`,
+          },
+          body: JSON.stringify({ path }),
+        });
+        const content = await response.text();
+        return { path, content };
+      }
     },
     async write(path, content) {
-      return client.request('/api/file/putFile', { path, file: content });
+      const body = new FormData();
+      body.set('path', path);
+      body.set('isDir', 'false');
+      body.set('modTime', String(Date.now()));
+      body.set('file', new Blob([content], { type: 'text/plain' }), path.split('/').pop() || 'file.txt');
+      return client.requestMultipart('/api/file/putFile', body);
     },
     async remove(path) {
       return client.request('/api/file/removeFile', { path });

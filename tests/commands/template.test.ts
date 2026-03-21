@@ -70,18 +70,18 @@ describe('template command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: 0, msg: '', data: { path: '/templates/daily.md', content: '# Daily Note\n\n- item' } }),
+      text: async () => '# Daily Note\n\n- item',
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'template', 'get', '--path', '/templates/daily.md']);
 
-    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/template/render', {
+    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/file/getFile', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Token secret-token',
       },
-      body: JSON.stringify({ path: '/templates/daily.md' }),
+      body: JSON.stringify({ path: '/data/templates/daily.md' }),
     });
     expect(logSpy).toHaveBeenCalledWith('# Daily Note\n\n- item');
   });
@@ -91,13 +91,13 @@ describe('template command', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      json: async () => ({ code: 0, msg: '', data: { path: '/templates/daily.md', content: '# Daily Note' } }),
+      text: async () => '# Daily Note',
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'template', 'get', '--path', '/templates/daily.md', '--json']);
 
     expect(logSpy).toHaveBeenCalledWith(`{
-  "path": "/templates/daily.md",
+  "path": "/data/templates/daily.md",
   "content": "# Daily Note"
 }`);
   });
