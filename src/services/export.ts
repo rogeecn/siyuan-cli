@@ -38,6 +38,8 @@ interface RawExportMarkdownResult {
   markdownPath?: string;
   name?: string;
   zip?: string;
+  hPath?: string;
+  content?: string;
 }
 
 interface RawExportHtmlResult {
@@ -82,8 +84,8 @@ function normalizePreview(result: RawExportPreview): ExportPreview {
 
 function normalizeMarkdown(result: RawExportMarkdownResult): ExportMarkdownResult {
   return {
-    document: result.document?.trim() || result.name?.trim() || '(unknown)',
-    markdownPath: result.markdownPath?.trim() || result.zip?.trim() || '(no markdown path)',
+    document: result.document?.trim() || result.name?.trim() || result.hPath?.trim() || '(unknown)',
+    markdownPath: result.markdownPath?.trim() || result.zip?.trim() || result.content || '(no markdown path)',
   };
 }
 
@@ -115,7 +117,7 @@ export function createExportService(client: SiyuanClient): ExportService {
       return normalizePreview(result || {});
     },
     async markdown(id) {
-      const result = await client.request<RawExportMarkdownResult>('/api/export/exportMd', { id });
+      const result = await client.request<RawExportMarkdownResult>('/api/export/exportMdContent', { id });
       return normalizeMarkdown(result || {});
     },
     async html(id) {

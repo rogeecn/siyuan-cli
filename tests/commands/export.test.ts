@@ -83,13 +83,13 @@ describe('export command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { name: 'doc-1', zip: '/export/spec.md.zip' },
+        data: { hPath: '/Projects/Spec', content: '# Spec\n\nHello' },
       }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'export', 'markdown', '--id', 'doc-1']);
 
-    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/export/exportMd', {
+    expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:6806/api/export/exportMdContent', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ describe('export command', () => {
       },
       body: JSON.stringify({ id: 'doc-1' }),
     });
-    expect(logSpy).toHaveBeenCalledWith(['document: doc-1', 'markdownPath: /export/spec.md.zip'].join('\n'));
+    expect(logSpy).toHaveBeenCalledWith(['document: /Projects/Spec', 'markdownPath: # Spec\n\nHello'].join('\n'));
   });
 
   test('exports markdown with raw json output', async () => {
@@ -108,15 +108,15 @@ describe('export command', () => {
       json: async () => ({
         code: 0,
         msg: '',
-        data: { name: 'doc-1', zip: '/export/spec.md.zip' },
+        data: { hPath: '/Projects/Spec', content: '# Spec\n\nHello' },
       }),
     } as Response);
 
     await createCli().parseAsync(['node', 'siyuan', 'export', 'markdown', '--id', 'doc-1', '--json']);
 
     expect(logSpy).toHaveBeenCalledWith(`{
-  "document": "doc-1",
-  "markdownPath": "/export/spec.md.zip"
+  "document": "/Projects/Spec",
+  "markdownPath": "# Spec\\n\\nHello"
 }`);
   });
 
