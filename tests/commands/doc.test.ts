@@ -159,6 +159,56 @@ describe('doc command', () => {
 }`);
   });
 
+  test('uploads local images before creating a document from content file', async () => {
+    const imagePath = join(tempDir, 'cover.png');
+    writeFileSync(imagePath, 'png-data');
+    writeFileSync(contentFile, '# From File\n\n![](./cover.png)');
+
+    fetchMock
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        json: async () => ({ code: 0, msg: '', data: null }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        json: async () => ({ code: 0, msg: '', data: { id: 'doc-asset', path: '/Projects/WithAsset' } }),
+      } as Response);
+
+    await createCli().parseAsync([
+      'node',
+      'siyuan',
+      'doc',
+      'create',
+      '--notebook',
+      'nb-1',
+      '--path',
+      '/Projects/WithAsset',
+      '--content-file',
+      contentFile,
+      '--json',
+    ]);
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      'http://127.0.0.1:6806/api/file/putFile',
+      expect.objectContaining({
+        method: 'POST',
+        body: expect.any(FormData),
+      })
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      'http://127.0.0.1:6806/api/filetree/createDocWithMd',
+      expect.objectContaining({
+        body: expect.stringContaining('/data/assets/cli-publish/'),
+      })
+    );
+  });
+
   test('creates a document from content file', async () => {
     fetchMock.mockResolvedValue({
       ok: true,

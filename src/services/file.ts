@@ -20,10 +20,18 @@ interface RawFileReadResult {
   content?: string;
 }
 
+export interface BinaryFileInput {
+  path: string;
+  data: Blob;
+  fileName?: string;
+  modTime?: number;
+}
+
 export interface FileService {
   tree(path: string): Promise<FileTreeNode[]>;
   read(path: string): Promise<FileReadResult>;
   write(path: string, content: string): Promise<unknown>;
+  writeBinary(input: BinaryFileInput): Promise<unknown>;
   remove(path: string): Promise<unknown>;
 }
 
@@ -74,6 +82,14 @@ export function createFileService(client: SiyuanClient): FileService {
       body.set('isDir', 'false');
       body.set('modTime', String(Date.now()));
       body.set('file', new Blob([content], { type: 'text/plain' }), path.split('/').pop() || 'file.txt');
+      return client.requestMultipart('/api/file/putFile', body);
+    },
+    async writeBinary({ path, data, fileName, modTime }) {
+      const body = new FormData();
+      body.set('path', path);
+      body.set('isDir', 'false');
+      body.set('modTime', String(modTime ?? Date.now()));
+      body.set('file', data, fileName || path.split('/').pop() || 'file.bin');
       return client.requestMultipart('/api/file/putFile', body);
     },
     async remove(path) {

@@ -76,8 +76,8 @@ export function createBlockCommand(
     .option('--content-file <file>', 'Read Markdown content from a file')
     .option('--json', 'Print raw JSON output')
     .action(async (options: BlockContentOptions) => {
-      const markdown = await resolveMarkdown(options);
-      const result = await createService().update({ id: options.id, markdown });
+      const resolved = await resolveMarkdown(options);
+      const result = await createService().update({ id: options.id, markdown: resolved.markdown });
       printOutput(result, options, () => `Updated block ${options.id}`);
     });
 
@@ -89,8 +89,8 @@ export function createBlockCommand(
     .option('--content-file <file>', 'Read Markdown content from a file')
     .option('--json', 'Print raw JSON output')
     .action(async (options: BlockContentOptions) => {
-      const markdown = await resolveMarkdown(options);
-      const result = await createService().insert({ id: options.id, markdown });
+      const resolved = await resolveMarkdown(options);
+      const result = await createService().insert({ id: options.id, markdown: resolved.markdown });
       printOutput(result, options, () => `Inserted block after ${options.id}`);
     });
 

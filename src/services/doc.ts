@@ -1,5 +1,8 @@
 import { readFile } from 'node:fs/promises';
+import { basename } from 'node:path';
 import { SiyuanClient } from '../core/http.js';
+import { buildAssetUploadInput, prepareMarkdownAssets } from './doc-assets.js';
+import type { FileService } from './file.js';
 
 export interface DocContentInput {
   content?: string;
@@ -15,6 +18,7 @@ export interface CreateDocInput {
   notebook: string;
   path: string;
   markdown: string;
+  sourceFilePath?: string;
 }
 
 export interface CreateDocResult {
@@ -26,11 +30,13 @@ export interface CreateDocResult {
 export interface UpdateDocInput {
   id: string;
   markdown: string;
+  sourceFilePath?: string;
 }
 
 export interface AppendDocInput {
   id: string;
   markdown: string;
+  sourceFilePath?: string;
 }
 
 export interface RenameDocInput {
@@ -53,6 +59,11 @@ export interface DocService {
   remove(id: string): Promise<unknown>;
 }
 
+export interface ResolvedMarkdown {
+  markdown: string;
+  sourceFilePath?: string;
+}
+
 function hasValue(value: string | undefined) {
   return value !== undefined && value.trim() !== '';
 }
@@ -73,7 +84,7 @@ export function hasSingleContentSource(input: DocContentInput) {
   return Number(hasContent) + Number(hasContentFile) === 1;
 }
 
-export async function resolveMarkdown(input: DocContentInput) {
+export async function resolveMarkdown(input: DocContentInput): Promise<ResolvedMarkdown> {
   if (input.content !== undefined && input.content.trim() === '') {
     throw new Error('--content must not be empty');
   }
@@ -87,13 +98,16 @@ export async function resolveMarkdown(input: DocContentInput) {
   }
 
   if (input.content !== undefined) {
-    return input.content;
+    return { markdown: input.content };
   }
 
   const filePath = input.contentFile!.trim();
 
   try {
-    return await readFile(filePath, 'utf8');
+    return {
+      markdown: await readFile(filePath, 'utf8'),
+      sourceFilePath: filePath,
+    };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new Error(`Failed to read --content-file: ${message}`);
@@ -130,7 +144,18 @@ function normalizeCreateDocResult(result: CreateDocResult | string): CreateDocRe
   return result || {};
 }
 
-export function createDocService(client: SiyuanClient): DocService {
+async function prepareDocMarkdown(markdown: string, sourceFilePath: string | undefined, fileService: FileService) {
+  return prepareMarkdownAssets(markdown, {
+    markdownFilePath: sourceFilePath,
+    uploadAsset: async (input, suggestedName) => {
+      const remotePath = `/data/assets/cli-publish/${new Date().toISOString().slice(0, 10)}/${suggestedName}`;
+      await fileService.writeBinary(buildAssetUploadInput(remotePath, input.data, input.fileName || basename(remotePath)));
+      return remotePath;
+    },
+  });
+}
+
+export function createDocService(client: SiyuanClient, fileService?: FileService): DocService {
   return {
     async get(id) {
       const result = await client.request<GetDocResult>('/api/filetree/getDoc', { id });
@@ -142,7 +167,14 @@ export function createDocService(client: SiyuanClient): DocService {
       return result;
     },
     async create(input) {
-      const result = await client.request<CreateDocResult | string>('/api/filetree/createDocWithMd', input);
+      const prepared = fileService
+        ? await prepareDocMarkdown(input.markdown, input.sourceFilePath, fileService)
+        : { markdown: input.markdown };
+      const result = await client.request<CreateDocResult | string>('/api/filetree/createDocWithMd', {
+        notebook: input.notebook,
+        path: input.path,
+        markdown: prepared.markdown,
+      });
 
       if (!result) {
         throw new Error('Create document response is empty');
@@ -150,13 +182,15 @@ export function createDocService(client: SiyuanClient): DocService {
 
       return normalizeCreateDocResult(result);
     },
-    update({ id, markdown }) {
-      return client.request('/api/block/updateBlock', { id, data: markdown, dataType: 'markdown' });
+    async update({ id, markdown, sourceFilePath }) {
+      const prepared = fileService ? await prepareDocMarkdown(markdown, sourceFilePath, fileService) : { markdown };
+      return client.request('/api/block/updateBlock', { id, data: prepared.markdown, dataType: 'markdown' });
     },
-    append({ id, markdown }) {
+    async append({ id, markdown, sourceFilePath }) {
+      const prepared = fileService ? await prepareDocMarkdown(markdown, sourceFilePath, fileService) : { markdown };
       return client.request('/api/filetree/appendBlock', {
         id,
-        data: markdown,
+        data: prepared.markdown,
         dataType: 'markdown',
       });
     },

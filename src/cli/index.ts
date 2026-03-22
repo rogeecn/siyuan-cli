@@ -103,8 +103,9 @@ export function createCli() {
     createDocCommand(() => {
       const config = loadEnvConfig();
       const client = new SiyuanClient(config);
+      const fileService = createFileService(client);
 
-      return createDocService(client);
+      return createDocService(client, fileService);
     })
   );
 

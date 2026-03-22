@@ -73,11 +73,12 @@ export function createDocCommand(
     .option('--content-file <file>', 'Read Markdown content from a file')
     .option('--json', 'Print raw JSON output')
     .action(async (options: CreateDocOptions) => {
-      const markdown = await resolveMarkdown(options);
+      const resolved = await resolveMarkdown(options);
       const result = await createService().create({
         notebook: options.notebook,
         path: options.path,
-        markdown,
+        markdown: resolved.markdown,
+        sourceFilePath: resolved.sourceFilePath,
       });
 
       if (options.json) {
@@ -96,8 +97,12 @@ export function createDocCommand(
     .option('--content-file <file>', 'Read Markdown content from a file')
     .option('--json', 'Print raw JSON output')
     .action(async (options: MutateDocOptions) => {
-      const markdown = await resolveMarkdown(options);
-      const result = await createService().update({ id: options.id, markdown });
+      const resolved = await resolveMarkdown(options);
+      const result = await createService().update({
+        id: options.id,
+        markdown: resolved.markdown,
+        sourceFilePath: resolved.sourceFilePath,
+      });
 
       if (options.json) {
         printJson(result);
@@ -115,8 +120,12 @@ export function createDocCommand(
     .option('--content-file <file>', 'Read Markdown content from a file')
     .option('--json', 'Print raw JSON output')
     .action(async (options: MutateDocOptions) => {
-      const markdown = await resolveMarkdown(options);
-      const result = await createService().append({ id: options.id, markdown });
+      const resolved = await resolveMarkdown(options);
+      const result = await createService().append({
+        id: options.id,
+        markdown: resolved.markdown,
+        sourceFilePath: resolved.sourceFilePath,
+      });
 
       if (options.json) {
         printJson(result);
