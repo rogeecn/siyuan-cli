@@ -55,6 +55,42 @@ node dist/src/cli/run.js template list
 node dist/src/cli/run.js notify push --msg "hello"
 ```
 
+## Publishing Markdown with Images
+
+`doc create`, `doc update`, and `doc append` can publish Markdown that contains image references. Before the document is sent to SiYuan, the CLI scans Markdown image syntax, uploads referenced images, and rewrites the links automatically.
+
+Example with a Markdown file:
+
+```bash
+node dist/src/cli/run.js doc create \
+  --notebook nb-1 \
+  --path /articles/with-images \
+  --content-file ./post.md
+```
+
+Example with inline Markdown:
+
+```bash
+node dist/src/cli/run.js doc create \
+  --notebook nb-1 \
+  --path /articles/inline-images \
+  --content "# Hello\n\n![](https://example.com/cover.png)"
+```
+
+Supported image sources:
+
+- relative local paths such as `./img/cover.png`
+- absolute local paths such as `/Users/name/Pictures/cover.png`
+- remote URLs such as `https://example.com/cover.png`
+- `data:` URIs
+
+Current behavior:
+
+- uploaded images are stored under `/data/assets/cli-publish/<date>/...`
+- Markdown image links are rewritten automatically to the uploaded asset path
+- relative image paths are resolved relative to the `--content-file` location
+- if one image fails to resolve or upload, the whole publish command fails
+
 ## JSON Output
 
 Most implemented commands support `--json` for script-friendly output.
