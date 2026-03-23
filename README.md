@@ -492,6 +492,22 @@ npm run build
 npm test
 ```
 
+## Release
+
+GitHub Actions can publish `siyuan-cli` to npm in two ways:
+
+- Push a Git tag matching `v*` to publish automatically
+- Run the workflow manually from the GitHub Actions UI on the default branch
+- Store the npm access token in the repository secret `NPM_TOKEN`
+- For tag-based releases, tag `vX.Y.Z` must match `package.json` version `X.Y.Z`
+
+Example tag push:
+
+```bash
+git tag v0.1.1
+git push origin v0.1.1
+```
+
 Useful checks while iterating on commands:
 
 ```bash

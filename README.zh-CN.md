@@ -492,6 +492,22 @@ npm run build
 npm test
 ```
 
+## 发布
+
+GitHub Actions 可以通过两种方式把 `siyuan-cli` 发布到 npm：
+
+- 推送匹配 `v*` 的 Git 标签后自动发布
+- 在 GitHub Actions 页面基于默认分支手动触发工作流发布
+- 在仓库 Secret 中配置 npm 访问令牌 `NPM_TOKEN`
+- 对于标签发布，标签 `vX.Y.Z` 必须和 `package.json` 里的版本 `X.Y.Z` 完全匹配
+
+标签发布示例：
+
+```bash
+git tag v0.1.1
+git push origin v0.1.1
+```
+
 迭代命令时常用的检查方式：
 
 ```bash
