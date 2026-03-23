@@ -87,6 +87,10 @@ siyuan doc --help
 siyuan block update --help
 ```
 
+## Agent 使用
+
+如果你希望 AI Agent 稳定地使用这个 CLI，建议先查看仓库根目录下的 `SKILL.md`。它专门说明了 Agent 何时应该优先使用真实的 `siyuan` 命令、何时加 `--json`，以及如何安全处理破坏性操作。
+
 ## 使用约定
 
 - `ID` - 大多数读取、更新、导出、删除流程都依赖 SiYuan 的 document id、block id、notebook id、snapshot id 等标识。

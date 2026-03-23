@@ -87,6 +87,10 @@ siyuan doc --help
 siyuan block update --help
 ```
 
+## Agent Usage
+
+If you want an AI agent to use this CLI consistently, start with `SKILL.md` in the repo root. It summarizes when agents should prefer real `siyuan` commands, when to add `--json`, and how to treat destructive operations safely.
+
 ## Usage Conventions
 
 - `IDs` - Most read, update, export, and remove flows use SiYuan IDs such as document IDs, block IDs, notebook IDs, and snapshot IDs.
