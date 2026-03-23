@@ -19,9 +19,9 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan search --content foo` calls the expected search API and prints friendly output
-- `siyuan search --json` returns raw JSON
-- `siyuan search` without criteria fails before making a request
+- `npx siyuan-cli search --content foo` calls the expected search API and prints friendly output
+- `npx siyuan-cli search --json` returns raw JSON
+- `npx siyuan-cli search` without criteria fails before making a request
 - missing env vars fail lazily at command runtime
 
 **Step 2: Run test to verify it fails**

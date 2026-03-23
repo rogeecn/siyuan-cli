@@ -74,7 +74,7 @@ Document local install/build flow, optional global install via the package bin, 
 
 **Step 3: Add a quick start and usage patterns section**
 
-Show the `siyuan` command name, the built-path fallback `node dist/src/cli/run.js`, and a few representative commands.
+Show `npx siyuan-cli <commands>` as the default public entrypoint, keep `node dist/src/cli/run.js` as the repo-local fallback, and include a few representative commands.
 
 **Step 4: Add a full command reference section**
 
@@ -132,7 +132,7 @@ Focus on triggers like searching SiYuan notes, reading or updating documents, ex
 
 **Step 3: Add setup and invocation guidance**
 
-Document required env vars, the `siyuan` executable, and the preference for `--json` in scripted agent flows.
+Document required env vars, the public `npx siyuan-cli` entrypoint, optional repo-local execution via `node dist/src/cli/run.js`, and the preference for `--json` in scripted agent flows.
 
 **Step 4: Map command families to agent tasks**
 

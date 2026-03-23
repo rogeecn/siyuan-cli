@@ -18,11 +18,11 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan block update --id blk-1 --content "new"` calls the expected update API and prints friendly output
-- `siyuan block insert --id blk-1 --content "new"` calls the expected insert API and prints friendly output
-- `siyuan block move --id blk-1 --parent blk-2` calls the expected move API and prints friendly output
-- `siyuan block remove --id blk-1` requires confirmation by default
-- `siyuan block remove --id blk-1 --yes` skips confirmation and calls the expected remove API
+- `npx siyuan-cli block update --id blk-1 --content "new"` calls the expected update API and prints friendly output
+- `npx siyuan-cli block insert --id blk-1 --content "new"` calls the expected insert API and prints friendly output
+- `npx siyuan-cli block move --id blk-1 --parent blk-2` calls the expected move API and prints friendly output
+- `npx siyuan-cli block remove --id blk-1` requires confirmation by default
+- `npx siyuan-cli block remove --id blk-1 --yes` skips confirmation and calls the expected remove API
 - `--json` returns raw JSON for all new commands
 
 **Step 2: Run test to verify it fails**

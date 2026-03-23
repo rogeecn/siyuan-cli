@@ -19,13 +19,13 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan file tree --path /data/assets` calls the expected file-tree API and prints friendly output
-- `siyuan file tree --path /data/assets --json` returns raw JSON
-- `siyuan file read --path /data/assets/readme.md` calls the expected file-read API and prints friendly output
-- `siyuan file read --path /data/assets/readme.md --json` returns raw JSON
+- `npx siyuan-cli file tree --path /data/assets` calls the expected file-tree API and prints friendly output
+- `npx siyuan-cli file tree --path /data/assets --json` returns raw JSON
+- `npx siyuan-cli file read --path /data/assets/readme.md` calls the expected file-read API and prints friendly output
+- `npx siyuan-cli file read --path /data/assets/readme.md --json` returns raw JSON
 - empty tree results print `No results found.`
 - missing env vars fail lazily at command runtime
-- `siyuan --help` and `siyuan file --help` do not trigger env loading
+- `npx siyuan-cli --help` and `npx siyuan-cli file --help` do not trigger env loading
 
 **Step 2: Run test to verify it fails**
 

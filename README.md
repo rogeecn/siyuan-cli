@@ -2,6 +2,18 @@
 
 [简体中文](./README.zh-CN.md)
 
+CLI for SiYuan Note that helps you search notes, read documents, update content, and export results from the terminal.
+
+```bash
+npx siyuan-cli search --content "roadmap" --json
+```
+
+Before running commands, set `SIYUAN_BASE_URL` and `SIYUAN_TOKEN`.
+
+- Search notes by content, filename, or tag
+- Read and update documents as Markdown
+- Export notes as Markdown, HTML, PDF, or DOCX
+
 Human-friendly CLI for SiYuan Note. It wraps the SiYuan HTTP API in task-oriented commands so you can search notes, read documents, update content, inspect notebooks, manage tags, export data, and script repeatable workflows from the terminal.
 
 ## Why use it
@@ -20,27 +32,33 @@ Human-friendly CLI for SiYuan Note. It wraps the SiYuan HTTP API in task-oriente
 
 ## Install
 
-Local development install:
+Recommended npm usage:
+
+```bash
+npx siyuan-cli --help
+```
+
+Local development setup:
 
 ```bash
 npm install
 npm run build
 ```
 
-Run from the repo root:
+Run from the repo root while developing:
 
 ```bash
 node dist/src/cli/run.js --help
 ```
 
-Optional global install for the `siyuan` command:
+Optional global install if you want a persistent shell command:
 
 ```bash
-npm install -g .
-siyuan --help
+npm install -g siyuan-cli
+siyuan-cli --help
 ```
 
-All examples in this README use `siyuan ...`. If you are running from the repository without a global install, replace `siyuan` with `node dist/src/cli/run.js`.
+All user-facing examples in this README use `npx siyuan-cli ...`. If you are running from the repository without publishing or installing the package, replace `npx siyuan-cli` with `node dist/src/cli/run.js`.
 
 ## Configuration
 
@@ -61,12 +79,12 @@ If either variable is missing, commands fail with a readable runtime error.
 ## Quick Start
 
 ```bash
-siyuan system version
-siyuan search --content "project alpha"
-siyuan doc get --id 20260316120000-abc123
-siyuan notebook list
-siyuan sql query --statement "select * from blocks limit 5"
-siyuan tag list
+npx siyuan-cli system version
+npx siyuan-cli search --content "project alpha"
+npx siyuan-cli doc get --id 20260316120000-abc123
+npx siyuan-cli notebook list
+npx siyuan-cli sql query --statement "select * from blocks limit 5"
+npx siyuan-cli tag list
 ```
 
 ## Command Overview
@@ -82,14 +100,14 @@ notebook
 Ask for built-in help any time:
 
 ```bash
-siyuan --help
-siyuan doc --help
-siyuan block update --help
+npx siyuan-cli --help
+npx siyuan-cli doc --help
+npx siyuan-cli block update --help
 ```
 
 ## Agent Usage
 
-If you want an AI agent to use this CLI consistently, start with `SKILL.md` in the repo root. It summarizes when agents should prefer real `siyuan` commands, when to add `--json`, and how to treat destructive operations safely.
+If you want an AI agent to use this CLI consistently, start with `SKILL.md` in the repo root. It summarizes when agents should prefer real `npx siyuan-cli` command forms, when to add `--json`, and how to treat destructive operations safely.
 
 ## Usage Conventions
 
@@ -107,16 +125,16 @@ Inspect SiYuan runtime state.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan system version` | Show the current SiYuan version | `--json` |
-| `siyuan system time` | Show server time | `--json` |
-| `siyuan system boot-progress` | Show boot progress percentage | `--json` |
+| `npx siyuan-cli system version` | Show the current SiYuan version | `--json` |
+| `npx siyuan-cli system time` | Show server time | `--json` |
+| `npx siyuan-cli system boot-progress` | Show boot progress percentage | `--json` |
 
 Examples:
 
 ```bash
-siyuan system version
-siyuan system time --json
-siyuan system boot-progress
+npx siyuan-cli system version
+npx siyuan-cli system time --json
+npx siyuan-cli system boot-progress
 ```
 
 ### `search`
@@ -134,9 +152,9 @@ Search notes by content, filename, or tag. At least one search criterion is requ
 Examples:
 
 ```bash
-siyuan search --content "project alpha"
-siyuan search --filename "meeting" --limit 20
-siyuan search --tag work --json
+npx siyuan-cli search --content "project alpha"
+npx siyuan-cli search --filename "meeting" --limit 20
+npx siyuan-cli search --tag work --json
 ```
 
 Tip: use `--json` when you need document IDs for follow-up commands such as `doc get`, `doc update`, or `export markdown`.
@@ -147,33 +165,33 @@ Read and edit documents as Markdown.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan doc get` | Read one document | `--id`, `--json` |
-| `siyuan doc create` | Create a document from Markdown | `--notebook`, `--path`, `--content` or `--content-file`, `--json` |
-| `siyuan doc update` | Replace document Markdown | `--id`, `--content` or `--content-file`, `--json` |
-| `siyuan doc append` | Append Markdown | `--id`, `--content` or `--content-file`, `--json` |
-| `siyuan doc rename` | Rename a document path | `--id`, `--path`, `--json` |
-| `siyuan doc move` | Move a document | `--id`, `--path`, `--json` |
-| `siyuan doc remove` | Remove a document | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli doc get` | Read one document | `--id`, `--json` |
+| `npx siyuan-cli doc create` | Create a document from Markdown | `--notebook`, `--path`, `--content` or `--content-file`, `--json` |
+| `npx siyuan-cli doc update` | Replace document Markdown | `--id`, `--content` or `--content-file`, `--json` |
+| `npx siyuan-cli doc append` | Append Markdown | `--id`, `--content` or `--content-file`, `--json` |
+| `npx siyuan-cli doc rename` | Rename a document path | `--id`, `--path`, `--json` |
+| `npx siyuan-cli doc move` | Move a document | `--id`, `--path`, `--json` |
+| `npx siyuan-cli doc remove` | Remove a document | `--id`, `--yes`, `--json` |
 
 Examples:
 
 ```bash
-siyuan doc get --id 20260316120000-abc123
+npx siyuan-cli doc get --id 20260316120000-abc123
 
-siyuan doc create \
+npx siyuan-cli doc create \
   --notebook nb-1 \
   --path /articles/cli-guide \
   --content-file ./post.md
 
-siyuan doc update \
+npx siyuan-cli doc update \
   --id 20260316120000-abc123 \
   --content "# Updated title"
 
-siyuan doc append \
+npx siyuan-cli doc append \
   --id 20260316120000-abc123 \
   --content-file ./appendix.md
 
-siyuan doc remove --id 20260316120000-abc123 --yes
+npx siyuan-cli doc remove --id 20260316120000-abc123 --yes
 ```
 
 #### Publishing Markdown with Images
@@ -183,7 +201,7 @@ siyuan doc remove --id 20260316120000-abc123 --yes
 Example with a Markdown file:
 
 ```bash
-siyuan doc create \
+npx siyuan-cli doc create \
   --notebook nb-1 \
   --path /articles/with-images \
   --content-file ./post.md
@@ -192,7 +210,7 @@ siyuan doc create \
 Example with inline Markdown:
 
 ```bash
-siyuan doc update \
+npx siyuan-cli doc update \
   --id 20260316120000-abc123 \
   --content "# Hello\n\n![](https://example.com/cover.png)"
 ```
@@ -217,22 +235,22 @@ Inspect and manage notebooks.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan notebook list` | List notebooks | `--json` |
-| `siyuan notebook get` | Read one notebook | `--id`, `--json` |
-| `siyuan notebook create` | Create a notebook | `--name`, `--json` |
-| `siyuan notebook open` | Open a notebook | `--id`, `--json` |
-| `siyuan notebook close` | Close a notebook | `--id`, `--json` |
-| `siyuan notebook rename` | Rename a notebook | `--id`, `--name`, `--json` |
-| `siyuan notebook remove` | Remove a notebook | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli notebook list` | List notebooks | `--json` |
+| `npx siyuan-cli notebook get` | Read one notebook | `--id`, `--json` |
+| `npx siyuan-cli notebook create` | Create a notebook | `--name`, `--json` |
+| `npx siyuan-cli notebook open` | Open a notebook | `--id`, `--json` |
+| `npx siyuan-cli notebook close` | Close a notebook | `--id`, `--json` |
+| `npx siyuan-cli notebook rename` | Rename a notebook | `--id`, `--name`, `--json` |
+| `npx siyuan-cli notebook remove` | Remove a notebook | `--id`, `--yes`, `--json` |
 
 Examples:
 
 ```bash
-siyuan notebook list
-siyuan notebook get --id nb-1 --json
-siyuan notebook create --name "Projects"
-siyuan notebook rename --id nb-1 --name "Archive"
-siyuan notebook remove --id nb-1 --yes
+npx siyuan-cli notebook list
+npx siyuan-cli notebook get --id nb-1 --json
+npx siyuan-cli notebook create --name "Projects"
+npx siyuan-cli notebook rename --id nb-1 --name "Archive"
+npx siyuan-cli notebook remove --id nb-1 --yes
 ```
 
 ### `block`
@@ -241,22 +259,22 @@ Inspect blocks and mutate block content.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan block get` | Read one block | `--id`, `--json` |
-| `siyuan block children` | List child blocks | `--id`, `--json` |
-| `siyuan block update` | Replace block content | `--id`, `--content` or `--content-file`, `--json` |
-| `siyuan block insert` | Insert a block after an existing block | `--id`, `--content` or `--content-file`, `--json` |
-| `siyuan block move` | Move to a new parent block | `--id`, `--parent`, `--json` |
-| `siyuan block remove` | Remove a block | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli block get` | Read one block | `--id`, `--json` |
+| `npx siyuan-cli block children` | List child blocks | `--id`, `--json` |
+| `npx siyuan-cli block update` | Replace block content | `--id`, `--content` or `--content-file`, `--json` |
+| `npx siyuan-cli block insert` | Insert a block after an existing block | `--id`, `--content` or `--content-file`, `--json` |
+| `npx siyuan-cli block move` | Move to a new parent block | `--id`, `--parent`, `--json` |
+| `npx siyuan-cli block remove` | Remove a block | `--id`, `--yes`, `--json` |
 
 Examples:
 
 ```bash
-siyuan block get --id blk-1
-siyuan block children --id blk-1 --json
-siyuan block update --id blk-1 --content-file ./section.md
-siyuan block insert --id blk-1 --content "- Follow-up item"
-siyuan block move --id blk-1 --parent parent-123
-siyuan block remove --id blk-1 --yes
+npx siyuan-cli block get --id blk-1
+npx siyuan-cli block children --id blk-1 --json
+npx siyuan-cli block update --id blk-1 --content-file ./section.md
+npx siyuan-cli block insert --id blk-1 --content "- Follow-up item"
+npx siyuan-cli block move --id blk-1 --parent parent-123
+npx siyuan-cli block remove --id blk-1 --yes
 ```
 
 ### `export`
@@ -265,18 +283,18 @@ Preview export metadata or export a document into a specific format.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan export preview` | Preview export details | `--id`, `--json` |
-| `siyuan export markdown` | Export as Markdown | `--id`, `--json` |
-| `siyuan export html` | Export as HTML | `--id`, `--json` |
-| `siyuan export pdf` | Export as PDF | `--id`, `--json` |
-| `siyuan export docx` | Export as DOCX | `--id`, `--json` |
+| `npx siyuan-cli export preview` | Preview export details | `--id`, `--json` |
+| `npx siyuan-cli export markdown` | Export as Markdown | `--id`, `--json` |
+| `npx siyuan-cli export html` | Export as HTML | `--id`, `--json` |
+| `npx siyuan-cli export pdf` | Export as PDF | `--id`, `--json` |
+| `npx siyuan-cli export docx` | Export as DOCX | `--id`, `--json` |
 
 Examples:
 
 ```bash
-siyuan export preview --id 20260316120000-abc123
-siyuan export markdown --id 20260316120000-abc123 --json
-siyuan export pdf --id 20260316120000-abc123
+npx siyuan-cli export preview --id 20260316120000-abc123
+npx siyuan-cli export markdown --id 20260316120000-abc123 --json
+npx siyuan-cli export pdf --id 20260316120000-abc123
 ```
 
 ### `file`
@@ -285,18 +303,18 @@ Browse, read, write, and remove files in the SiYuan workspace.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan file tree` | List files under a path | `--path`, `--json` |
-| `siyuan file read` | Read file content | `--path`, `--json` |
-| `siyuan file write` | Write file content | `--path`, `--content`, `--json` |
-| `siyuan file remove` | Remove a file | `--path`, `--yes`, `--json` |
+| `npx siyuan-cli file tree` | List files under a path | `--path`, `--json` |
+| `npx siyuan-cli file read` | Read file content | `--path`, `--json` |
+| `npx siyuan-cli file write` | Write file content | `--path`, `--content`, `--json` |
+| `npx siyuan-cli file remove` | Remove a file | `--path`, `--yes`, `--json` |
 
 Examples:
 
 ```bash
-siyuan file tree --path /data/assets
-siyuan file read --path /data/storage/notes/readme.md
-siyuan file write --path /data/storage/tmp/demo.md --content "hello"
-siyuan file remove --path /data/storage/tmp/demo.md --yes
+npx siyuan-cli file tree --path /data/assets
+npx siyuan-cli file read --path /data/storage/notes/readme.md
+npx siyuan-cli file write --path /data/storage/tmp/demo.md --content "hello"
+npx siyuan-cli file remove --path /data/storage/tmp/demo.md --yes
 ```
 
 ### `attr`
@@ -305,18 +323,18 @@ Inspect available attribute keys and read or write block attributes.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan attr get` | Read attributes for one block | `--id`, `--json` |
-| `siyuan attr list` | List known attribute keys | `--json` |
-| `siyuan attr set` | Set one attribute | `--id`, `--key`, `--value`, `--json` |
-| `siyuan attr reset` | Reset one attribute | `--id`, `--key`, `--json` |
+| `npx siyuan-cli attr get` | Read attributes for one block | `--id`, `--json` |
+| `npx siyuan-cli attr list` | List known attribute keys | `--json` |
+| `npx siyuan-cli attr set` | Set one attribute | `--id`, `--key`, `--value`, `--json` |
+| `npx siyuan-cli attr reset` | Reset one attribute | `--id`, `--key`, `--json` |
 
 Examples:
 
 ```bash
-siyuan attr list
-siyuan attr get --id blk-1
-siyuan attr set --id blk-1 --key custom-status --value active
-siyuan attr reset --id blk-1 --key custom-status
+npx siyuan-cli attr list
+npx siyuan-cli attr get --id blk-1
+npx siyuan-cli attr set --id blk-1 --key custom-status --value active
+npx siyuan-cli attr reset --id blk-1 --key custom-status
 ```
 
 ### `snapshot`
@@ -325,19 +343,19 @@ Inspect and manage repository snapshots.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan snapshot list` | List snapshots | `--json` |
-| `siyuan snapshot current` | Show current snapshot | `--json` |
-| `siyuan snapshot create` | Create a snapshot | `--memo`, `--json` |
-| `siyuan snapshot restore` | Restore a snapshot | `--id`, `--yes`, `--json` |
-| `siyuan snapshot remove` | Remove a snapshot | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli snapshot list` | List snapshots | `--json` |
+| `npx siyuan-cli snapshot current` | Show current snapshot | `--json` |
+| `npx siyuan-cli snapshot create` | Create a snapshot | `--memo`, `--json` |
+| `npx siyuan-cli snapshot restore` | Restore a snapshot | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli snapshot remove` | Remove a snapshot | `--id`, `--yes`, `--json` |
 
 Examples:
 
 ```bash
-siyuan snapshot list
-siyuan snapshot create --memo "before-import"
-siyuan snapshot restore --id snap-1 --yes
-siyuan snapshot remove --id snap-1 --yes
+npx siyuan-cli snapshot list
+npx siyuan-cli snapshot create --memo "before-import"
+npx siyuan-cli snapshot restore --id snap-1 --yes
+npx siyuan-cli snapshot remove --id snap-1 --yes
 ```
 
 ### `template`
@@ -346,18 +364,18 @@ Inspect, render, and remove templates.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan template list` | List templates | `--json` |
-| `siyuan template get` | Read one template by path | `--path`, `--json` |
-| `siyuan template render` | Render a template into a document | `--path`, `--id`, `--json` |
-| `siyuan template remove` | Remove a template | `--path`, `--yes`, `--json` |
+| `npx siyuan-cli template list` | List templates | `--json` |
+| `npx siyuan-cli template get` | Read one template by path | `--path`, `--json` |
+| `npx siyuan-cli template render` | Render a template into a document | `--path`, `--id`, `--json` |
+| `npx siyuan-cli template remove` | Remove a template | `--path`, `--yes`, `--json` |
 
 Examples:
 
 ```bash
-siyuan template list
-siyuan template get --path templates/daily-note.md
-siyuan template render --path templates/daily-note.md --id 20260316120000-abc123
-siyuan template remove --path templates/old.md --yes
+npx siyuan-cli template list
+npx siyuan-cli template get --path templates/daily-note.md
+npx siyuan-cli template render --path templates/daily-note.md --id 20260316120000-abc123
+npx siyuan-cli template remove --path templates/old.md --yes
 ```
 
 ### `notify`
@@ -366,16 +384,16 @@ Send and inspect notifications.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan notify push` | Push a notification message | `--msg`, `--json` |
-| `siyuan notify list` | List notifications | `--json` |
-| `siyuan notify clear` | Clear notifications | `--json` |
+| `npx siyuan-cli notify push` | Push a notification message | `--msg`, `--json` |
+| `npx siyuan-cli notify list` | List notifications | `--json` |
+| `npx siyuan-cli notify clear` | Clear notifications | `--json` |
 
 Examples:
 
 ```bash
-siyuan notify push --msg "Publish complete"
-siyuan notify list --json
-siyuan notify clear
+npx siyuan-cli notify push --msg "Publish complete"
+npx siyuan-cli notify list --json
+npx siyuan-cli notify clear
 ```
 
 ### `sql`
@@ -384,13 +402,13 @@ Run read-only SQL queries against SiYuan.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan sql query` | Execute a SQL statement | `--statement`, `--json` |
+| `npx siyuan-cli sql query` | Execute a SQL statement | `--statement`, `--json` |
 
 Examples:
 
 ```bash
-siyuan sql query --statement "select * from blocks limit 5"
-siyuan sql query --statement "select id, updated from blocks order by updated desc limit 10" --json
+npx siyuan-cli sql query --statement "select * from blocks limit 5"
+npx siyuan-cli sql query --statement "select id, updated from blocks order by updated desc limit 10" --json
 ```
 
 ### `tag`
@@ -399,18 +417,18 @@ Inspect tags, list tagged documents, rename tags, or remove tags.
 
 | Command | Description | Key options |
 | --- | --- | --- |
-| `siyuan tag list` | List tags with counts | `--json` |
-| `siyuan tag docs` | List documents for one tag | `--label`, `--json` |
-| `siyuan tag rename` | Rename a tag | `--old`, `--new`, `--json` |
-| `siyuan tag remove` | Remove a tag | `--label`, `--yes`, `--json` |
+| `npx siyuan-cli tag list` | List tags with counts | `--json` |
+| `npx siyuan-cli tag docs` | List documents for one tag | `--label`, `--json` |
+| `npx siyuan-cli tag rename` | Rename a tag | `--old`, `--new`, `--json` |
+| `npx siyuan-cli tag remove` | Remove a tag | `--label`, `--yes`, `--json` |
 
 Examples:
 
 ```bash
-siyuan tag list
-siyuan tag docs --label work
-siyuan tag rename --old project/alpha --new project/archive/alpha
-siyuan tag remove --label obsolete --yes
+npx siyuan-cli tag list
+npx siyuan-cli tag docs --label work
+npx siyuan-cli tag rename --old project/alpha --new project/archive/alpha
+npx siyuan-cli tag remove --label obsolete --yes
 ```
 
 ## Common Workflows
@@ -418,15 +436,15 @@ siyuan tag remove --label obsolete --yes
 Search, inspect, then export:
 
 ```bash
-siyuan search --content "roadmap" --json
-siyuan doc get --id 20260316120000-abc123
-siyuan export markdown --id 20260316120000-abc123
+npx siyuan-cli search --content "roadmap" --json
+npx siyuan-cli doc get --id 20260316120000-abc123
+npx siyuan-cli export markdown --id 20260316120000-abc123
 ```
 
 Create a document from a local Markdown file:
 
 ```bash
-siyuan doc create \
+npx siyuan-cli doc create \
   --notebook nb-1 \
   --path /articles/weekly-update \
   --content-file ./weekly-update.md
@@ -435,15 +453,15 @@ siyuan doc create \
 Inspect a notebook and then move a document:
 
 ```bash
-siyuan notebook list
-siyuan doc move --id 20260316120000-abc123 --path /archive/2026/weekly-update
+npx siyuan-cli notebook list
+npx siyuan-cli doc move --id 20260316120000-abc123 --path /archive/2026/weekly-update
 ```
 
 Attach metadata to a block:
 
 ```bash
-siyuan attr set --id blk-1 --key review-status --value done
-siyuan attr get --id blk-1 --json
+npx siyuan-cli attr set --id blk-1 --key review-status --value done
+npx siyuan-cli attr get --id blk-1 --json
 ```
 
 ## JSON Output and Scripting
@@ -460,9 +478,9 @@ Use it when you need to:
 Examples:
 
 ```bash
-siyuan search --tag work --json | jq '.[].id'
-siyuan notebook list --json
-siyuan export preview --id 20260316120000-abc123 --json
+npx siyuan-cli search --tag work --json | jq '.[].id'
+npx siyuan-cli notebook list --json
+npx siyuan-cli export preview --id 20260316120000-abc123 --json
 ```
 
 ## Destructive Commands
@@ -475,14 +493,14 @@ Destructive commands are designed to be explicit.
 
 Typical destructive commands:
 
-- `siyuan doc remove --id ... --yes`
-- `siyuan block remove --id ... --yes`
-- `siyuan file remove --path ... --yes`
-- `siyuan notebook remove --id ... --yes`
-- `siyuan snapshot restore --id ... --yes`
-- `siyuan snapshot remove --id ... --yes`
-- `siyuan template remove --path ... --yes`
-- `siyuan tag remove --label ... --yes`
+- `npx siyuan-cli doc remove --id ... --yes`
+- `npx siyuan-cli block remove --id ... --yes`
+- `npx siyuan-cli file remove --path ... --yes`
+- `npx siyuan-cli notebook remove --id ... --yes`
+- `npx siyuan-cli snapshot restore --id ... --yes`
+- `npx siyuan-cli snapshot remove --id ... --yes`
+- `npx siyuan-cli template remove --path ... --yes`
+- `npx siyuan-cli tag remove --label ... --yes`
 
 ## Development
 
@@ -522,9 +540,9 @@ node dist/src/cli/run.js search --content demo --json
 
 - Confirm `SIYUAN_BASE_URL` and `SIYUAN_TOKEN` are exported in the same shell session
 
-`Cannot run siyuan`
+`Cannot run the CLI`
 
-- Use `node dist/src/cli/run.js ...` from the repo root or install globally with `npm install -g .`
+- Use `npx siyuan-cli ...`, or run `node dist/src/cli/run.js ...` from the repo root while developing locally
 
 `Need IDs for follow-up commands`
 

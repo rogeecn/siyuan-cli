@@ -19,13 +19,13 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan snapshot list` calls the expected snapshot-list API and prints friendly output
-- `siyuan snapshot list --json` returns raw JSON
-- `siyuan snapshot current` calls the expected current-snapshot API and prints friendly output
-- `siyuan snapshot current --json` returns raw JSON
+- `npx siyuan-cli snapshot list` calls the expected snapshot-list API and prints friendly output
+- `npx siyuan-cli snapshot list --json` returns raw JSON
+- `npx siyuan-cli snapshot current` calls the expected current-snapshot API and prints friendly output
+- `npx siyuan-cli snapshot current --json` returns raw JSON
 - empty list results print `No results found.`
 - missing env vars fail lazily at command runtime
-- `siyuan --help` and `siyuan snapshot --help` do not trigger env loading
+- `npx siyuan-cli --help` and `npx siyuan-cli snapshot --help` do not trigger env loading
 
 **Step 2: Run test to verify it fails**
 

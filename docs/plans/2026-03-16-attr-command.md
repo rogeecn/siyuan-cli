@@ -19,13 +19,13 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan attr get --id blk-1` calls the expected attr API and prints friendly output
-- `siyuan attr get --id blk-1 --json` returns raw JSON
-- `siyuan attr list` calls the expected attr-name API and prints friendly output
-- `siyuan attr list --json` returns raw JSON
+- `npx siyuan-cli attr get --id blk-1` calls the expected attr API and prints friendly output
+- `npx siyuan-cli attr get --id blk-1 --json` returns raw JSON
+- `npx siyuan-cli attr list` calls the expected attr-name API and prints friendly output
+- `npx siyuan-cli attr list --json` returns raw JSON
 - empty list results print `No results found.`
 - missing env vars fail lazily at command runtime
-- `siyuan --help` and `siyuan attr --help` do not trigger env loading
+- `npx siyuan-cli --help` and `npx siyuan-cli attr --help` do not trigger env loading
 
 **Step 2: Run test to verify it fails**
 

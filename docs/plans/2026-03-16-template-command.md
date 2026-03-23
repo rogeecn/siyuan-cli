@@ -19,13 +19,13 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan template list` calls the expected template-list API and prints friendly output
-- `siyuan template list --json` returns raw JSON
-- `siyuan template get --path /templates/daily.md` calls the expected template-read API and prints friendly output
-- `siyuan template get --path /templates/daily.md --json` returns raw JSON
+- `npx siyuan-cli template list` calls the expected template-list API and prints friendly output
+- `npx siyuan-cli template list --json` returns raw JSON
+- `npx siyuan-cli template get --path /templates/daily.md` calls the expected template-read API and prints friendly output
+- `npx siyuan-cli template get --path /templates/daily.md --json` returns raw JSON
 - empty list results print `No results found.`
 - missing env vars fail lazily at command runtime
-- `siyuan --help` and `siyuan template --help` do not trigger env loading
+- `npx siyuan-cli --help` and `npx siyuan-cli template --help` do not trigger env loading
 
 **Step 2: Run test to verify it fails**
 

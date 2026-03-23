@@ -19,13 +19,13 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan block get --id blk-1` calls the expected block API and prints friendly output
-- `siyuan block get --id blk-1 --json` returns raw JSON
-- `siyuan block children --id blk-1` calls the expected child-block API and prints friendly output
-- `siyuan block children --id blk-1 --json` returns raw JSON
+- `npx siyuan-cli block get --id blk-1` calls the expected block API and prints friendly output
+- `npx siyuan-cli block get --id blk-1 --json` returns raw JSON
+- `npx siyuan-cli block children --id blk-1` calls the expected child-block API and prints friendly output
+- `npx siyuan-cli block children --id blk-1 --json` returns raw JSON
 - empty child results print `No results found.`
 - missing env vars fail lazily at command runtime
-- `siyuan --help` and `siyuan block --help` do not trigger env loading
+- `npx siyuan-cli --help` and `npx siyuan-cli block --help` do not trigger env loading
 
 **Step 2: Run test to verify it fails**
 

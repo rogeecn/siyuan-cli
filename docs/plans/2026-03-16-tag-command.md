@@ -19,13 +19,13 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan tag list` calls the expected tag listing API and prints friendly output
-- `siyuan tag list --json` returns raw JSON
-- `siyuan tag docs --label work` calls the expected tag-doc API and prints friendly output
-- `siyuan tag docs --label work --json` returns raw JSON
+- `npx siyuan-cli tag list` calls the expected tag listing API and prints friendly output
+- `npx siyuan-cli tag list --json` returns raw JSON
+- `npx siyuan-cli tag docs --label work` calls the expected tag-doc API and prints friendly output
+- `npx siyuan-cli tag docs --label work --json` returns raw JSON
 - empty results print `No results found.`
 - missing env vars fail lazily at command runtime
-- `siyuan --help` and `siyuan tag --help` do not trigger env loading
+- `npx siyuan-cli --help` and `npx siyuan-cli tag --help` do not trigger env loading
 
 **Step 2: Run test to verify it fails**
 

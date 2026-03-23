@@ -19,10 +19,10 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan doc rename --id doc-1 --path /Projects/NewName` calls the expected rename API and prints friendly output
-- `siyuan doc move --id doc-1 --path /Archive/Old` calls the expected move API and prints friendly output
-- `siyuan doc remove --id doc-1` requires confirmation by default
-- `siyuan doc remove --id doc-1 --yes` skips confirmation and calls the expected remove API
+- `npx siyuan-cli doc rename --id doc-1 --path /Projects/NewName` calls the expected rename API and prints friendly output
+- `npx siyuan-cli doc move --id doc-1 --path /Archive/Old` calls the expected move API and prints friendly output
+- `npx siyuan-cli doc remove --id doc-1` requires confirmation by default
+- `npx siyuan-cli doc remove --id doc-1 --yes` skips confirmation and calls the expected remove API
 - `--json` returns raw JSON for the new commands
 - blank `--id` and blank `--path` fail before requests are made
 

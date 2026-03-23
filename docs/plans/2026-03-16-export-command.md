@@ -19,12 +19,12 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan export preview --id doc-1` calls the expected preview API and prints friendly output
-- `siyuan export preview --id doc-1 --json` returns raw JSON
-- `siyuan export markdown --id doc-1` calls the expected markdown export API and prints friendly output
-- `siyuan export markdown --id doc-1 --json` returns raw JSON
+- `npx siyuan-cli export preview --id doc-1` calls the expected preview API and prints friendly output
+- `npx siyuan-cli export preview --id doc-1 --json` returns raw JSON
+- `npx siyuan-cli export markdown --id doc-1` calls the expected markdown export API and prints friendly output
+- `npx siyuan-cli export markdown --id doc-1 --json` returns raw JSON
 - missing env vars fail lazily at command runtime
-- `siyuan --help` and `siyuan export --help` do not trigger env loading
+- `npx siyuan-cli --help` and `npx siyuan-cli export --help` do not trigger env loading
 
 **Step 2: Run test to verify it fails**
 

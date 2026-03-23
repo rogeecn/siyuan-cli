@@ -19,11 +19,11 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan notebook rename --id nb-1 --name "Projects 2"` calls the expected rename API and prints friendly output
-- `siyuan notebook rename --id nb-1 --name "Projects 2" --json` returns raw JSON
-- `siyuan notebook remove --id nb-1` requires confirmation by default
-- `siyuan notebook remove --id nb-1 --yes` skips confirmation and calls the expected remove API
-- `siyuan notebook remove --id nb-1 --json --yes` returns raw JSON
+- `npx siyuan-cli notebook rename --id nb-1 --name "Projects 2"` calls the expected rename API and prints friendly output
+- `npx siyuan-cli notebook rename --id nb-1 --name "Projects 2" --json` returns raw JSON
+- `npx siyuan-cli notebook remove --id nb-1` requires confirmation by default
+- `npx siyuan-cli notebook remove --id nb-1 --yes` skips confirmation and calls the expected remove API
+- `npx siyuan-cli notebook remove --id nb-1 --json --yes` returns raw JSON
 - blank `--id` and blank `--name` still fail before making requests
 
 **Step 2: Run test to verify it fails**

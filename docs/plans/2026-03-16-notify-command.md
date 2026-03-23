@@ -19,11 +19,11 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan notify push --msg "hello"` calls the expected notify API and prints friendly output
-- `siyuan notify push --msg "hello" --json` returns raw JSON
+- `npx siyuan-cli notify push --msg "hello"` calls the expected notify API and prints friendly output
+- `npx siyuan-cli notify push --msg "hello" --json` returns raw JSON
 - API failures are propagated with the shared error model
 - missing env vars fail lazily at command runtime
-- `siyuan --help` and `siyuan notify --help` do not trigger env loading
+- `npx siyuan-cli --help` and `npx siyuan-cli notify --help` do not trigger env loading
 
 **Step 2: Run test to verify it fails**
 

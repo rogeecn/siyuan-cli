@@ -2,6 +2,18 @@
 
 [English](./README.md)
 
+这是一个面向思源笔记的 CLI，适合在终端里快速搜索笔记、读取文档、更新内容和导出结果。
+
+```bash
+npx siyuan-cli search --content "roadmap" --json
+```
+
+运行前请先设置 `SIYUAN_BASE_URL` 和 `SIYUAN_TOKEN`。
+
+- 按正文、文件名或标签搜索笔记
+- 用 Markdown 读取和更新文档
+- 导出为 Markdown、HTML、PDF 或 DOCX
+
 面向 SiYuan Note 的人类友好命令行工具。它把 SiYuan HTTP API 封装成按任务组织的命令，让你可以在终端里搜索笔记、读取文档、更新内容、查看笔记本、管理标签、导出数据，并把这些流程稳定地接入脚本或 Agent。
 
 ## 为什么使用它
@@ -20,6 +32,12 @@
 
 ## 安装
 
+推荐的 npm 用法：
+
+```bash
+npx siyuan-cli --help
+```
+
 本地开发安装：
 
 ```bash
@@ -27,20 +45,20 @@ npm install
 npm run build
 ```
 
-在仓库根目录运行：
+在仓库根目录调试运行：
 
 ```bash
 node dist/src/cli/run.js --help
 ```
 
-如果你想直接使用 `siyuan` 命令，可以全局安装：
+如果你希望有一个长期可用的全局命令，也可以安装：
 
 ```bash
-npm install -g .
-siyuan --help
+npm install -g siyuan-cli
+siyuan-cli --help
 ```
 
-本文所有示例都使用 `siyuan ...`。如果你是在仓库里直接运行，请把 `siyuan` 替换成 `node dist/src/cli/run.js`。
+本文所有面向用户的示例默认都使用 `npx siyuan-cli ...`。如果你是在仓库里直接开发或调试，请把 `npx siyuan-cli` 替换成 `node dist/src/cli/run.js`。
 
 ## 配置
 
@@ -61,12 +79,12 @@ export SIYUAN_TOKEN="your-token"
 ## 快速开始
 
 ```bash
-siyuan system version
-siyuan search --content "project alpha"
-siyuan doc get --id 20260316120000-abc123
-siyuan notebook list
-siyuan sql query --statement "select * from blocks limit 5"
-siyuan tag list
+npx siyuan-cli system version
+npx siyuan-cli search --content "project alpha"
+npx siyuan-cli doc get --id 20260316120000-abc123
+npx siyuan-cli notebook list
+npx siyuan-cli sql query --statement "select * from blocks limit 5"
+npx siyuan-cli tag list
 ```
 
 ## 命令总览
@@ -82,14 +100,14 @@ notebook
 随时可以查看内置帮助：
 
 ```bash
-siyuan --help
-siyuan doc --help
-siyuan block update --help
+npx siyuan-cli --help
+npx siyuan-cli doc --help
+npx siyuan-cli block update --help
 ```
 
 ## Agent 使用
 
-如果你希望 AI Agent 稳定地使用这个 CLI，建议先查看仓库根目录下的 `SKILL.md`。它专门说明了 Agent 何时应该优先使用真实的 `siyuan` 命令、何时加 `--json`，以及如何安全处理破坏性操作。
+如果你希望 AI Agent 稳定地使用这个 CLI，建议先查看仓库根目录下的 `SKILL.md`。它专门说明了 Agent 何时应该优先使用真实的 `npx siyuan-cli` 命令形式、何时加 `--json`，以及如何安全处理破坏性操作。
 
 ## 使用约定
 
@@ -107,16 +125,16 @@ siyuan block update --help
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan system version` | 查看当前 SiYuan 版本 | `--json` |
-| `siyuan system time` | 查看服务端时间 | `--json` |
-| `siyuan system boot-progress` | 查看启动进度百分比 | `--json` |
+| `npx siyuan-cli system version` | 查看当前 SiYuan 版本 | `--json` |
+| `npx siyuan-cli system time` | 查看服务端时间 | `--json` |
+| `npx siyuan-cli system boot-progress` | 查看启动进度百分比 | `--json` |
 
 示例：
 
 ```bash
-siyuan system version
-siyuan system time --json
-siyuan system boot-progress
+npx siyuan-cli system version
+npx siyuan-cli system time --json
+npx siyuan-cli system boot-progress
 ```
 
 ### `search`
@@ -134,9 +152,9 @@ siyuan system boot-progress
 示例：
 
 ```bash
-siyuan search --content "project alpha"
-siyuan search --filename "meeting" --limit 20
-siyuan search --tag work --json
+npx siyuan-cli search --content "project alpha"
+npx siyuan-cli search --filename "meeting" --limit 20
+npx siyuan-cli search --tag work --json
 ```
 
 提示：如果下一步要继续执行 `doc get`、`doc update`、`export markdown` 等依赖文档 ID 的命令，建议直接加 `--json`。
@@ -147,33 +165,33 @@ siyuan search --tag work --json
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan doc get` | 读取单个文档 | `--id`, `--json` |
-| `siyuan doc create` | 用 Markdown 创建文档 | `--notebook`, `--path`, `--content` 或 `--content-file`, `--json` |
-| `siyuan doc update` | 替换文档 Markdown 内容 | `--id`, `--content` 或 `--content-file`, `--json` |
-| `siyuan doc append` | 追加 Markdown 内容 | `--id`, `--content` 或 `--content-file`, `--json` |
-| `siyuan doc rename` | 重命名文档路径 | `--id`, `--path`, `--json` |
-| `siyuan doc move` | 移动文档到新路径 | `--id`, `--path`, `--json` |
-| `siyuan doc remove` | 删除文档 | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli doc get` | 读取单个文档 | `--id`, `--json` |
+| `npx siyuan-cli doc create` | 用 Markdown 创建文档 | `--notebook`, `--path`, `--content` 或 `--content-file`, `--json` |
+| `npx siyuan-cli doc update` | 替换文档 Markdown 内容 | `--id`, `--content` 或 `--content-file`, `--json` |
+| `npx siyuan-cli doc append` | 追加 Markdown 内容 | `--id`, `--content` 或 `--content-file`, `--json` |
+| `npx siyuan-cli doc rename` | 重命名文档路径 | `--id`, `--path`, `--json` |
+| `npx siyuan-cli doc move` | 移动文档到新路径 | `--id`, `--path`, `--json` |
+| `npx siyuan-cli doc remove` | 删除文档 | `--id`, `--yes`, `--json` |
 
 示例：
 
 ```bash
-siyuan doc get --id 20260316120000-abc123
+npx siyuan-cli doc get --id 20260316120000-abc123
 
-siyuan doc create \
+npx siyuan-cli doc create \
   --notebook nb-1 \
   --path /articles/cli-guide \
   --content-file ./post.md
 
-siyuan doc update \
+npx siyuan-cli doc update \
   --id 20260316120000-abc123 \
   --content "# Updated title"
 
-siyuan doc append \
+npx siyuan-cli doc append \
   --id 20260316120000-abc123 \
   --content-file ./appendix.md
 
-siyuan doc remove --id 20260316120000-abc123 --yes
+npx siyuan-cli doc remove --id 20260316120000-abc123 --yes
 ```
 
 #### 发布包含图片的 Markdown
@@ -183,7 +201,7 @@ siyuan doc remove --id 20260316120000-abc123 --yes
 使用 Markdown 文件：
 
 ```bash
-siyuan doc create \
+npx siyuan-cli doc create \
   --notebook nb-1 \
   --path /articles/with-images \
   --content-file ./post.md
@@ -192,7 +210,7 @@ siyuan doc create \
 使用内联 Markdown：
 
 ```bash
-siyuan doc update \
+npx siyuan-cli doc update \
   --id 20260316120000-abc123 \
   --content "# Hello\n\n![](https://example.com/cover.png)"
 ```
@@ -217,22 +235,22 @@ siyuan doc update \
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan notebook list` | 列出所有笔记本 | `--json` |
-| `siyuan notebook get` | 查看单个笔记本 | `--id`, `--json` |
-| `siyuan notebook create` | 创建笔记本 | `--name`, `--json` |
-| `siyuan notebook open` | 打开笔记本 | `--id`, `--json` |
-| `siyuan notebook close` | 关闭笔记本 | `--id`, `--json` |
-| `siyuan notebook rename` | 重命名笔记本 | `--id`, `--name`, `--json` |
-| `siyuan notebook remove` | 删除笔记本 | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli notebook list` | 列出所有笔记本 | `--json` |
+| `npx siyuan-cli notebook get` | 查看单个笔记本 | `--id`, `--json` |
+| `npx siyuan-cli notebook create` | 创建笔记本 | `--name`, `--json` |
+| `npx siyuan-cli notebook open` | 打开笔记本 | `--id`, `--json` |
+| `npx siyuan-cli notebook close` | 关闭笔记本 | `--id`, `--json` |
+| `npx siyuan-cli notebook rename` | 重命名笔记本 | `--id`, `--name`, `--json` |
+| `npx siyuan-cli notebook remove` | 删除笔记本 | `--id`, `--yes`, `--json` |
 
 示例：
 
 ```bash
-siyuan notebook list
-siyuan notebook get --id nb-1 --json
-siyuan notebook create --name "Projects"
-siyuan notebook rename --id nb-1 --name "Archive"
-siyuan notebook remove --id nb-1 --yes
+npx siyuan-cli notebook list
+npx siyuan-cli notebook get --id nb-1 --json
+npx siyuan-cli notebook create --name "Projects"
+npx siyuan-cli notebook rename --id nb-1 --name "Archive"
+npx siyuan-cli notebook remove --id nb-1 --yes
 ```
 
 ### `block`
@@ -241,22 +259,22 @@ siyuan notebook remove --id nb-1 --yes
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan block get` | 查看单个块 | `--id`, `--json` |
-| `siyuan block children` | 查看子块列表 | `--id`, `--json` |
-| `siyuan block update` | 替换块内容 | `--id`, `--content` 或 `--content-file`, `--json` |
-| `siyuan block insert` | 在指定块后插入新块 | `--id`, `--content` 或 `--content-file`, `--json` |
-| `siyuan block move` | 移动到新的父块下 | `--id`, `--parent`, `--json` |
-| `siyuan block remove` | 删除块 | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli block get` | 查看单个块 | `--id`, `--json` |
+| `npx siyuan-cli block children` | 查看子块列表 | `--id`, `--json` |
+| `npx siyuan-cli block update` | 替换块内容 | `--id`, `--content` 或 `--content-file`, `--json` |
+| `npx siyuan-cli block insert` | 在指定块后插入新块 | `--id`, `--content` 或 `--content-file`, `--json` |
+| `npx siyuan-cli block move` | 移动到新的父块下 | `--id`, `--parent`, `--json` |
+| `npx siyuan-cli block remove` | 删除块 | `--id`, `--yes`, `--json` |
 
 示例：
 
 ```bash
-siyuan block get --id blk-1
-siyuan block children --id blk-1 --json
-siyuan block update --id blk-1 --content-file ./section.md
-siyuan block insert --id blk-1 --content "- Follow-up item"
-siyuan block move --id blk-1 --parent parent-123
-siyuan block remove --id blk-1 --yes
+npx siyuan-cli block get --id blk-1
+npx siyuan-cli block children --id blk-1 --json
+npx siyuan-cli block update --id blk-1 --content-file ./section.md
+npx siyuan-cli block insert --id blk-1 --content "- Follow-up item"
+npx siyuan-cli block move --id blk-1 --parent parent-123
+npx siyuan-cli block remove --id blk-1 --yes
 ```
 
 ### `export`
@@ -265,18 +283,18 @@ siyuan block remove --id blk-1 --yes
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan export preview` | 预览导出信息 | `--id`, `--json` |
-| `siyuan export markdown` | 导出为 Markdown | `--id`, `--json` |
-| `siyuan export html` | 导出为 HTML | `--id`, `--json` |
-| `siyuan export pdf` | 导出为 PDF | `--id`, `--json` |
-| `siyuan export docx` | 导出为 DOCX | `--id`, `--json` |
+| `npx siyuan-cli export preview` | 预览导出信息 | `--id`, `--json` |
+| `npx siyuan-cli export markdown` | 导出为 Markdown | `--id`, `--json` |
+| `npx siyuan-cli export html` | 导出为 HTML | `--id`, `--json` |
+| `npx siyuan-cli export pdf` | 导出为 PDF | `--id`, `--json` |
+| `npx siyuan-cli export docx` | 导出为 DOCX | `--id`, `--json` |
 
 示例：
 
 ```bash
-siyuan export preview --id 20260316120000-abc123
-siyuan export markdown --id 20260316120000-abc123 --json
-siyuan export pdf --id 20260316120000-abc123
+npx siyuan-cli export preview --id 20260316120000-abc123
+npx siyuan-cli export markdown --id 20260316120000-abc123 --json
+npx siyuan-cli export pdf --id 20260316120000-abc123
 ```
 
 ### `file`
@@ -285,18 +303,18 @@ siyuan export pdf --id 20260316120000-abc123
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan file tree` | 列出路径下的文件 | `--path`, `--json` |
-| `siyuan file read` | 读取文件内容 | `--path`, `--json` |
-| `siyuan file write` | 写入文件内容 | `--path`, `--content`, `--json` |
-| `siyuan file remove` | 删除文件 | `--path`, `--yes`, `--json` |
+| `npx siyuan-cli file tree` | 列出路径下的文件 | `--path`, `--json` |
+| `npx siyuan-cli file read` | 读取文件内容 | `--path`, `--json` |
+| `npx siyuan-cli file write` | 写入文件内容 | `--path`, `--content`, `--json` |
+| `npx siyuan-cli file remove` | 删除文件 | `--path`, `--yes`, `--json` |
 
 示例：
 
 ```bash
-siyuan file tree --path /data/assets
-siyuan file read --path /data/storage/notes/readme.md
-siyuan file write --path /data/storage/tmp/demo.md --content "hello"
-siyuan file remove --path /data/storage/tmp/demo.md --yes
+npx siyuan-cli file tree --path /data/assets
+npx siyuan-cli file read --path /data/storage/notes/readme.md
+npx siyuan-cli file write --path /data/storage/tmp/demo.md --content "hello"
+npx siyuan-cli file remove --path /data/storage/tmp/demo.md --yes
 ```
 
 ### `attr`
@@ -305,18 +323,18 @@ siyuan file remove --path /data/storage/tmp/demo.md --yes
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan attr get` | 查看某个块的属性 | `--id`, `--json` |
-| `siyuan attr list` | 列出可用属性键 | `--json` |
-| `siyuan attr set` | 设置属性 | `--id`, `--key`, `--value`, `--json` |
-| `siyuan attr reset` | 重置属性 | `--id`, `--key`, `--json` |
+| `npx siyuan-cli attr get` | 查看某个块的属性 | `--id`, `--json` |
+| `npx siyuan-cli attr list` | 列出可用属性键 | `--json` |
+| `npx siyuan-cli attr set` | 设置属性 | `--id`, `--key`, `--value`, `--json` |
+| `npx siyuan-cli attr reset` | 重置属性 | `--id`, `--key`, `--json` |
 
 示例：
 
 ```bash
-siyuan attr list
-siyuan attr get --id blk-1
-siyuan attr set --id blk-1 --key custom-status --value active
-siyuan attr reset --id blk-1 --key custom-status
+npx siyuan-cli attr list
+npx siyuan-cli attr get --id blk-1
+npx siyuan-cli attr set --id blk-1 --key custom-status --value active
+npx siyuan-cli attr reset --id blk-1 --key custom-status
 ```
 
 ### `snapshot`
@@ -325,19 +343,19 @@ siyuan attr reset --id blk-1 --key custom-status
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan snapshot list` | 列出快照 | `--json` |
-| `siyuan snapshot current` | 查看当前快照 | `--json` |
-| `siyuan snapshot create` | 创建快照 | `--memo`, `--json` |
-| `siyuan snapshot restore` | 恢复某个快照 | `--id`, `--yes`, `--json` |
-| `siyuan snapshot remove` | 删除快照 | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli snapshot list` | 列出快照 | `--json` |
+| `npx siyuan-cli snapshot current` | 查看当前快照 | `--json` |
+| `npx siyuan-cli snapshot create` | 创建快照 | `--memo`, `--json` |
+| `npx siyuan-cli snapshot restore` | 恢复某个快照 | `--id`, `--yes`, `--json` |
+| `npx siyuan-cli snapshot remove` | 删除快照 | `--id`, `--yes`, `--json` |
 
 示例：
 
 ```bash
-siyuan snapshot list
-siyuan snapshot create --memo "before-import"
-siyuan snapshot restore --id snap-1 --yes
-siyuan snapshot remove --id snap-1 --yes
+npx siyuan-cli snapshot list
+npx siyuan-cli snapshot create --memo "before-import"
+npx siyuan-cli snapshot restore --id snap-1 --yes
+npx siyuan-cli snapshot remove --id snap-1 --yes
 ```
 
 ### `template`
@@ -346,18 +364,18 @@ siyuan snapshot remove --id snap-1 --yes
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan template list` | 列出模板 | `--json` |
-| `siyuan template get` | 按路径读取模板 | `--path`, `--json` |
-| `siyuan template render` | 把模板渲染到指定文档 | `--path`, `--id`, `--json` |
-| `siyuan template remove` | 删除模板 | `--path`, `--yes`, `--json` |
+| `npx siyuan-cli template list` | 列出模板 | `--json` |
+| `npx siyuan-cli template get` | 按路径读取模板 | `--path`, `--json` |
+| `npx siyuan-cli template render` | 把模板渲染到指定文档 | `--path`, `--id`, `--json` |
+| `npx siyuan-cli template remove` | 删除模板 | `--path`, `--yes`, `--json` |
 
 示例：
 
 ```bash
-siyuan template list
-siyuan template get --path templates/daily-note.md
-siyuan template render --path templates/daily-note.md --id 20260316120000-abc123
-siyuan template remove --path templates/old.md --yes
+npx siyuan-cli template list
+npx siyuan-cli template get --path templates/daily-note.md
+npx siyuan-cli template render --path templates/daily-note.md --id 20260316120000-abc123
+npx siyuan-cli template remove --path templates/old.md --yes
 ```
 
 ### `notify`
@@ -366,16 +384,16 @@ siyuan template remove --path templates/old.md --yes
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan notify push` | 推送一条通知 | `--msg`, `--json` |
-| `siyuan notify list` | 列出通知 | `--json` |
-| `siyuan notify clear` | 清空通知 | `--json` |
+| `npx siyuan-cli notify push` | 推送一条通知 | `--msg`, `--json` |
+| `npx siyuan-cli notify list` | 列出通知 | `--json` |
+| `npx siyuan-cli notify clear` | 清空通知 | `--json` |
 
 示例：
 
 ```bash
-siyuan notify push --msg "Publish complete"
-siyuan notify list --json
-siyuan notify clear
+npx siyuan-cli notify push --msg "Publish complete"
+npx siyuan-cli notify list --json
+npx siyuan-cli notify clear
 ```
 
 ### `sql`
@@ -384,13 +402,13 @@ siyuan notify clear
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan sql query` | 执行 SQL 语句 | `--statement`, `--json` |
+| `npx siyuan-cli sql query` | 执行 SQL 语句 | `--statement`, `--json` |
 
 示例：
 
 ```bash
-siyuan sql query --statement "select * from blocks limit 5"
-siyuan sql query --statement "select id, updated from blocks order by updated desc limit 10" --json
+npx siyuan-cli sql query --statement "select * from blocks limit 5"
+npx siyuan-cli sql query --statement "select id, updated from blocks order by updated desc limit 10" --json
 ```
 
 ### `tag`
@@ -399,18 +417,18 @@ siyuan sql query --statement "select id, updated from blocks order by updated de
 
 | 命令 | 说明 | 关键参数 |
 | --- | --- | --- |
-| `siyuan tag list` | 列出标签及计数 | `--json` |
-| `siyuan tag docs` | 查看某标签下的文档 | `--label`, `--json` |
-| `siyuan tag rename` | 重命名标签 | `--old`, `--new`, `--json` |
-| `siyuan tag remove` | 删除标签 | `--label`, `--yes`, `--json` |
+| `npx siyuan-cli tag list` | 列出标签及计数 | `--json` |
+| `npx siyuan-cli tag docs` | 查看某标签下的文档 | `--label`, `--json` |
+| `npx siyuan-cli tag rename` | 重命名标签 | `--old`, `--new`, `--json` |
+| `npx siyuan-cli tag remove` | 删除标签 | `--label`, `--yes`, `--json` |
 
 示例：
 
 ```bash
-siyuan tag list
-siyuan tag docs --label work
-siyuan tag rename --old project/alpha --new project/archive/alpha
-siyuan tag remove --label obsolete --yes
+npx siyuan-cli tag list
+npx siyuan-cli tag docs --label work
+npx siyuan-cli tag rename --old project/alpha --new project/archive/alpha
+npx siyuan-cli tag remove --label obsolete --yes
 ```
 
 ## 常见工作流
@@ -418,15 +436,15 @@ siyuan tag remove --label obsolete --yes
 先搜索，再读取，再导出：
 
 ```bash
-siyuan search --content "roadmap" --json
-siyuan doc get --id 20260316120000-abc123
-siyuan export markdown --id 20260316120000-abc123
+npx siyuan-cli search --content "roadmap" --json
+npx siyuan-cli doc get --id 20260316120000-abc123
+npx siyuan-cli export markdown --id 20260316120000-abc123
 ```
 
 从本地 Markdown 文件创建文档：
 
 ```bash
-siyuan doc create \
+npx siyuan-cli doc create \
   --notebook nb-1 \
   --path /articles/weekly-update \
   --content-file ./weekly-update.md
@@ -435,15 +453,15 @@ siyuan doc create \
 查看笔记本后移动文档：
 
 ```bash
-siyuan notebook list
-siyuan doc move --id 20260316120000-abc123 --path /archive/2026/weekly-update
+npx siyuan-cli notebook list
+npx siyuan-cli doc move --id 20260316120000-abc123 --path /archive/2026/weekly-update
 ```
 
 给块附加元数据：
 
 ```bash
-siyuan attr set --id blk-1 --key review-status --value done
-siyuan attr get --id blk-1 --json
+npx siyuan-cli attr set --id blk-1 --key review-status --value done
+npx siyuan-cli attr get --id blk-1 --json
 ```
 
 ## JSON 输出与脚本集成
@@ -460,9 +478,9 @@ siyuan attr get --id blk-1 --json
 示例：
 
 ```bash
-siyuan search --tag work --json | jq '.[].id'
-siyuan notebook list --json
-siyuan export preview --id 20260316120000-abc123 --json
+npx siyuan-cli search --tag work --json | jq '.[].id'
+npx siyuan-cli notebook list --json
+npx siyuan-cli export preview --id 20260316120000-abc123 --json
 ```
 
 ## 破坏性命令
@@ -475,14 +493,14 @@ siyuan export preview --id 20260316120000-abc123 --json
 
 常见破坏性命令：
 
-- `siyuan doc remove --id ... --yes`
-- `siyuan block remove --id ... --yes`
-- `siyuan file remove --path ... --yes`
-- `siyuan notebook remove --id ... --yes`
-- `siyuan snapshot restore --id ... --yes`
-- `siyuan snapshot remove --id ... --yes`
-- `siyuan template remove --path ... --yes`
-- `siyuan tag remove --label ... --yes`
+- `npx siyuan-cli doc remove --id ... --yes`
+- `npx siyuan-cli block remove --id ... --yes`
+- `npx siyuan-cli file remove --path ... --yes`
+- `npx siyuan-cli notebook remove --id ... --yes`
+- `npx siyuan-cli snapshot restore --id ... --yes`
+- `npx siyuan-cli snapshot remove --id ... --yes`
+- `npx siyuan-cli template remove --path ... --yes`
+- `npx siyuan-cli tag remove --label ... --yes`
 
 ## 开发
 
@@ -522,9 +540,9 @@ node dist/src/cli/run.js search --content demo --json
 
 - 确认 `SIYUAN_BASE_URL` 和 `SIYUAN_TOKEN` 在当前 shell 会话中已经导出
 
-`无法运行 siyuan`
+`无法运行 CLI`
 
-- 在仓库根目录使用 `node dist/src/cli/run.js ...`，或通过 `npm install -g .` 全局安装
+- 优先使用 `npx siyuan-cli ...`，本地开发时也可以在仓库根目录运行 `node dist/src/cli/run.js ...`
 
 `需要给后续命令传 ID`
 

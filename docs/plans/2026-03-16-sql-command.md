@@ -19,11 +19,11 @@
 **Step 1: Write the failing test**
 
 Add tests that prove:
-- `siyuan sql query --statement "select * from blocks limit 2"` calls the expected SQL API and prints a friendly table
-- `siyuan sql query --statement "select * from blocks limit 2" --json` returns raw JSON
-- `siyuan sql query --statement "select * from blocks limit 2"` prints `No results found.` for an empty result set
+- `npx siyuan-cli sql query --statement "select * from blocks limit 2"` calls the expected SQL API and prints a friendly table
+- `npx siyuan-cli sql query --statement "select * from blocks limit 2" --json` returns raw JSON
+- `npx siyuan-cli sql query --statement "select * from blocks limit 2"` prints `No results found.` for an empty result set
 - missing env vars fail lazily at command runtime
-- `siyuan --help` and `siyuan sql --help` do not trigger env loading
+- `npx siyuan-cli --help` and `npx siyuan-cli sql --help` do not trigger env loading
 
 **Step 2: Run test to verify it fails**
 
