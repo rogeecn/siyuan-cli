@@ -2,9 +2,9 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Rewrite `siyuan-cli` docs so users and agents can understand every implemented command group, configure the CLI correctly, and use an agent-oriented `SKILL.md`.
+**Goal:** Rewrite `siyuan-cli` docs so users and agents can understand every implemented command group, configure the CLI correctly, and use an agent-oriented skill at `skills/siyuan-cli/SKILL.md`.
 
-**Architecture:** Keep the documentation centered in the repo root. Use `README.md` as the canonical English source, mirror it in `README.zh-CN.md`, and write a separate `SKILL.md` organized around agent workflows instead of human-first onboarding. Derive every command section from the actual CLI source so the docs stay aligned with implemented behavior.
+**Architecture:** Keep the documentation centered in the repo root. Use `README.md` as the canonical English source, mirror it in `README.zh-CN.md`, and write a separate `skills/siyuan-cli/SKILL.md` organized around agent workflows instead of human-first onboarding. Derive every command section from the actual CLI source so the docs stay aligned with implemented behavior.
 
 **Tech Stack:** Markdown documentation, Commander CLI source, TypeScript source references
 
@@ -115,10 +115,10 @@ At the top of each README, link to the other language file.
 
 Confirm the two README files still match in scope and section order.
 
-### Task 4: Create an agent-oriented SKILL.md
+### Task 4: Create an agent-oriented `skills/siyuan-cli/SKILL.md`
 
 **Files:**
-- Create: `SKILL.md`
+- Create: `skills/siyuan-cli/SKILL.md`
 - Reference: `README.md`
 - Reference: `src/commands/*.ts`
 
@@ -147,7 +147,7 @@ Call out destructive commands, confirmation behavior, and cases where the agent 
 **Files:**
 - Verify: `README.md`
 - Verify: `README.zh-CN.md`
-- Verify: `SKILL.md`
+- Verify: `skills/siyuan-cli/SKILL.md`
 
 **Step 1: Re-run help commands**
 
@@ -171,13 +171,13 @@ Ensure example command names and flags match real implementation.
 
 Confirm `README.md` links to `README.zh-CN.md` and vice versa.
 
-**Step 4: Verify SKILL.md structure**
+**Step 4: Verify `skills/siyuan-cli/SKILL.md` structure**
 
 Confirm frontmatter is valid and the description describes when to use the skill rather than summarizing its workflow.
 
 **Step 5: Commit**
 
 ```bash
-git add README.md README.zh-CN.md SKILL.md
+git add README.md README.zh-CN.md skills/siyuan-cli/SKILL.md
 git commit -m "docs: expand CLI guides and add agent skill"
 ```

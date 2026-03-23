@@ -1,6 +1,6 @@
 # README and Skill Docs Design
 
-**Goal:** Upgrade `siyuan-cli` documentation so it has bilingual README files, detailed command usage guidance, and an agent-oriented `SKILL.md`.
+**Goal:** Upgrade `siyuan-cli` documentation so it has bilingual README files, detailed command usage guidance, and an agent-oriented skill at `skills/siyuan-cli/SKILL.md`.
 
 **Scope:** Update project-level docs in `siyuan-cli/` only. This includes rewriting the English README, adding a Simplified Chinese README, and adding one agent skill document. No CLI behavior changes are included.
 
@@ -9,7 +9,7 @@
 - `README.md` exists but is brief and mostly example-driven.
 - The CLI already exposes a broad command surface through `system`, `attr`, `block`, `search`, `snapshot`, `template`, `notify`, `doc`, `export`, `file`, `sql`, `tag`, and `notebook`.
 - There is no Chinese README in `siyuan-cli/`.
-- There is no root-level `SKILL.md` for agent usage.
+- There is no skill package yet at `skills/siyuan-cli/SKILL.md` for agent usage.
 
 ## Documentation Strategy
 
@@ -23,7 +23,7 @@ Add `README.zh-CN.md` with the same section order as `README.md`. Keep meaning a
 
 ### Agent-focused skill document stays separate
 
-Add `SKILL.md` to describe when an AI agent should use `siyuan-cli`, what setup it requires, what task types it covers well, how to prefer `--json` for automation, and where destructive commands need extra care. This document should be organized around agent workflows rather than human CLI discovery.
+Add `skills/siyuan-cli/SKILL.md` to describe when an AI agent should use `siyuan-cli`, what setup it requires, what task types it covers well, how to prefer `--json` for automation, and where destructive commands need extra care. This document should be organized around agent workflows rather than human CLI discovery.
 
 ## Recommended README Structure
 
@@ -56,7 +56,7 @@ For each command group:
 
 This keeps the README practical without trying to duplicate raw `--help` output line-for-line.
 
-## SKILL.md Structure
+## `skills/siyuan-cli/SKILL.md` Structure
 
 - Overview
 - When to use

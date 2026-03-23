@@ -107,7 +107,7 @@ npx siyuan-cli block update --help
 
 ## Agent 使用
 
-如果你希望 AI Agent 稳定地使用这个 CLI，建议先查看仓库根目录下的 `SKILL.md`。它专门说明了 Agent 何时应该优先使用真实的 `npx siyuan-cli` 命令形式、何时加 `--json`，以及如何安全处理破坏性操作。
+如果你希望 AI Agent 稳定地使用这个 CLI，建议先查看 `skills/siyuan-cli/SKILL.md`。它专门说明了 Agent 何时应该优先使用真实的 `npx siyuan-cli` 命令形式、何时加 `--json`，以及如何安全处理破坏性操作。
 
 ## 使用约定
 

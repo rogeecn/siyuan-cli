@@ -1,29 +1,29 @@
 ---
 name: siyuan-cli
-description: Use when a task mentions siyuan, siyuan-cli, notes, note-taking, 笔记, or 思源笔记 and needs real CLI commands to search notes, read or update documents, export content, inspect notebooks, tags, files, snapshots, or system state instead of guessing HTTP API calls.
+description: Use when a task mentions siyuan, siyuan-cli, note-taking, thought-note workflows, PKM, 笔记, or 思源笔记 and needs real CLI commands to search notes, inspect notebooks, read or update documents, export content, or automate SiYuan workflows instead of guessing HTTP API calls.
 ---
 
 # siyuan-cli
 
 ## Overview
 
-Use this skill to operate SiYuan through the real CLI in this repository. Prefer direct commands over hand-written API requests for search, document edits, exports, and workspace inspection.
+Use this skill when an agent should operate SiYuan through the real CLI in this repository. Prefer direct `npx siyuan-cli` commands over hand-written API requests for search, document edits, exports, notebook inspection, and other task-oriented note workflows.
 
-This package is intended to be published to npm. Default examples and recommendations should use `npx siyuan-cli <commands>`.
+This package is intended to be published to npm. Default examples and recommendations should use `npx siyuan-cli <command>`.
 
 ## When to Use
 
-- User mentions `siyuan`, `siyuan-cli`, `笔记`, or `思源笔记`
+- User mentions `siyuan`, `siyuan-cli`, `思源笔记`, `笔记`, note-taking, thought-note, or PKM workflows
 - Need real `siyuan-cli` commands instead of guessed HTTP calls
 - Need IDs or structured results from SiYuan for follow-up automation
-- Need to read, create, update, append, move, or remove documents
+- Need to read, create, update, append, move, export, or remove note content
 - Need notebook, block, tag, file, snapshot, template, notification, SQL, or system operations
 
 ## Requirements
 
-- Prefer npm package execution via `npx siyuan-cli <commands>`
-- Run from this repository root only when developing or testing the package locally
 - Ensure `SIYUAN_BASE_URL` and `SIYUAN_TOKEN` are set
+- Prefer npm package execution via `npx siyuan-cli <command>`
+- Run from the repository root only when developing or testing the package locally
 - Build first if using the repo checkout directly: `npm install && npm run build`
 
 Recommended npm invocation:
@@ -38,7 +38,7 @@ Repo-local invocation:
 node dist/src/cli/run.js --help
 ```
 
-Legacy/global invocation if already installed:
+Optional global invocation if already installed:
 
 ```bash
 npm install -g siyuan-cli
@@ -60,7 +60,7 @@ siyuan-cli --help
 
 ## Recommended Patterns
 
-- Default to `npx siyuan-cli <commands>` when showing end-user usage because the package is published to npm
+- Default to `npx siyuan-cli <command>` when showing end-user usage because the package is published to npm
 - Prefer `--json` when the result will be consumed by another command or parsed by an agent
 - Use search first, then feed returned IDs into `doc`, `export`, `block`, or `attr` commands
 - Use `--content-file` for larger Markdown updates and `--content` for short inline edits
@@ -97,6 +97,6 @@ npx siyuan-cli export markdown --id 20260316120000-abc123 --json
 | Guessing HTTP endpoints | Use the real `siyuan-cli` command family first |
 | Forgetting env vars | Export `SIYUAN_BASE_URL` and `SIYUAN_TOKEN` before running commands |
 | Parsing human text for IDs | Use `--json` |
-| Showing global install first | Prefer `npx siyuan-cli <commands>` as the default npm usage |
+| Showing global install first | Prefer `npx siyuan-cli <command>` as the default npm usage |
 | Using destructive commands casually | Omit `--yes` until the target is verified |
 | Updating large Markdown inline | Prefer `--content-file` |

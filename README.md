@@ -107,7 +107,7 @@ npx siyuan-cli block update --help
 
 ## Agent Usage
 
-If you want an AI agent to use this CLI consistently, start with `SKILL.md` in the repo root. It summarizes when agents should prefer real `npx siyuan-cli` command forms, when to add `--json`, and how to treat destructive operations safely.
+If you want an AI agent to use this CLI consistently, start with `skills/siyuan-cli/SKILL.md`. It summarizes when agents should prefer real `npx siyuan-cli` command forms, when to add `--json`, and how to treat destructive operations safely.
 
 ## Usage Conventions
 
