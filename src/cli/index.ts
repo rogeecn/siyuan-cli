@@ -32,7 +32,7 @@ export function createCli() {
   const program = new Command();
 
   program
-    .name('siyuan')
+    .name('siyuan-cli')
     .description('Human-friendly CLI for SiYuan Note')
     .version('0.1.0');
 

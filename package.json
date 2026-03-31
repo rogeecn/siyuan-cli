@@ -1,10 +1,10 @@
 {
   "name": "siyuan-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Human-friendly CLI for SiYuan Note",
   "type": "module",
   "bin": {
-    "siyuan": "dist/src/cli/run.js"
+    "siyuan-cli": "dist/src/cli/run.js"
   },
   "scripts": {
     "build": "tsc",

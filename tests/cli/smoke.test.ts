@@ -8,4 +8,10 @@ describe('createCli', () => {
     expect(typeof cli).toBe('object');
     expect(typeof cli.parseAsync).toBe('function');
   });
+
+  test('uses siyuan-cli as the root command name', () => {
+    const cli = createCli();
+
+    expect(cli.name()).toBe('siyuan-cli');
+  });
 });
