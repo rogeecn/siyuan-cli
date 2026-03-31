@@ -1,6 +1,6 @@
 {
   "name": "siyuan-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Human-friendly CLI for SiYuan Note",
   "type": "module",
   "bin": {

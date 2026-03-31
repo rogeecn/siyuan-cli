@@ -1,3 +1,6 @@
+import { createRequire } from 'node:module';
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { Command } from 'commander';
 import { createAttrCommand } from '../commands/attr.js';
 import { createBlockCommand } from '../commands/block.js';
@@ -28,13 +31,29 @@ import { createSystemService } from '../services/system.js';
 import { createTagService } from '../services/tag.js';
 import { createTemplateService } from '../services/template.js';
 
+const require = createRequire(import.meta.url);
+
+function getPackageVersion() {
+  const packageJsonPaths = ['../../package.json', '../../../package.json'];
+
+  for (const packageJsonPath of packageJsonPaths) {
+    const resolvedPath = new URL(packageJsonPath, import.meta.url);
+
+    if (existsSync(resolvedPath)) {
+      return (require(fileURLToPath(resolvedPath)) as { version: string }).version;
+    }
+  }
+
+  throw new Error('Unable to resolve package.json for CLI version');
+}
+
 export function createCli() {
   const program = new Command();
 
   program
     .name('siyuan-cli')
     .description('Human-friendly CLI for SiYuan Note')
-    .version('0.1.0');
+    .version(getPackageVersion());
 
   program.addCommand(
     createSystemCommand(() => {
